@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:drawable/editbox_dropdown_light_frame">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/alert_light_frame">
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_code"
+                android:textColor="#ffe00909"
+                android:hint="Customer Code"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_name"
+                android:hint="Customer name"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text"
+                android:inputType="textCapCharacters" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_nric"
+                android:hint="NRIC / PASSPORT NO."
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text"
+                android:inputType="textCapCharacters" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr1"
+                android:hint="Address Line 1"
+                android:textColor="#ff140000"
+                android:inputType="textCapCharacters"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr2"
+                android:hint="Address Line 2"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr3"
+                android:hint="Address Line 3"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr4"
+                android:hint="Address Line 4"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_tel"
+                android:hint="Telephon number"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_fax"
+                android:hint="Fax number"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_gst"
+                android:hint="Customer GST number"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:inputType="textCapCharacters"
+                android:background="@android:drawable/edit_text" />
+        </LinearLayout>
+        <TableLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableLayout1">
+            <TableRow
+                android:id="@+id/tableRow1">
+                <Button
+                    android:text="SAVE"
+                    android:layout_column="0"
+                    android:id="@+id/btnTrd_Save" />
+                <Button
+                    android:text="CANCEL"
+                    android:id="@+id/btnTrd_OK" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow2">
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>
