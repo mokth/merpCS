@@ -26,10 +26,12 @@ namespace wincom.mobile.erp
 		string ITEMUID ="";
 		string DELIVERYNO="";
 		string FIRSTLOAD="";
+		string compCode;
+		string branchCode;
 		Spinner spinner;
 		ArrayAdapter<String> dataAdapter;
-		double taxper;
-		bool isInclusive;
+	//	double taxper;
+//		bool isInclusive;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -38,6 +40,9 @@ namespace wincom.mobile.erp
 			}
 
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 
 			DELIVERYNO = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			ITEMUID = Intent.GetStringExtra ("itemuid") ?? "AUTO";
@@ -65,18 +70,18 @@ namespace wincom.mobile.erp
 			qty.EditorAction += HandleEditorAction;
 			qty.AfterTextChanged+= Qty_AfterTextChanged;
 
-			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-
-				items = db.Table<Item> ().ToList<Item> ();
+				items = db.Table<Item>().Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode).ToList<Item> ();
 			}
 
 			List<string> icodes = new List<string> ();
 			foreach (Item item in items) {
-				icodes.Add (item.ICode+" | "+item.IDesc);
+				if (item.IDesc.Length > 40) {
+					icodes.Add (item.ICode + " | " + item.IDesc.Substring(0,40)+"...");
+				}else icodes.Add (item.ICode + " | " + item.IDesc);
 			}
 
 			dataAdapter = new ArrayAdapter<String>(this,Resource.Layout.spinner_item, icodes);
@@ -123,7 +128,12 @@ namespace wincom.mobile.erp
 				var invlist =db.Table<DelOrderDtls> ().Where (x => x.dono == sono&& x.ID==id).ToList<DelOrderDtls> ();
 				if (invlist.Count > 0) {
 					DelOrderDtls doItem = invlist [0];
-					int index = dataAdapter.GetPosition (doItem.icode + " | " + doItem.description);
+					//int index = dataAdapter.GetPosition (doItem.icode + " | " + doItem.description);
+					int index = -1;
+					if (doItem.description.Length > 40)
+						index = dataAdapter.GetPosition (doItem.icode + " | " + doItem.description.Substring (0, 40) + "...");
+					else
+						index = dataAdapter.GetPosition (doItem.icode + " | " + doItem.description);
 					Item item =items.Where (x => x.ICode == doItem.icode).FirstOrDefault ();
 					spinner.SetSelection (index);
 					qty.Text = doItem.qty.ToString ();
@@ -155,10 +165,11 @@ namespace wincom.mobile.erp
 			DelOrderDtls doorder = new DelOrderDtls ();
 			string[] codedesc = spinner.SelectedItem.ToString ().Split (new char[]{ '|' });
 			doorder.dono = txtInvNo.Text;
-			doorder.description = codedesc [1].Trim();
+			//doorder.description = codedesc [1].Trim();
 			doorder.icode = codedesc [0].Trim();// spinner.SelectedItem.ToString ();
 			doorder.qty = stqQty;
-
+			doorder.CompCode = compCode;
+			doorder.BranchCode = branchCode;
 
 			var itemlist = items.Where (x => x.ICode == doorder.icode).ToList<Item> ();
 			if (itemlist.Count == 0) {
@@ -166,16 +177,20 @@ namespace wincom.mobile.erp
 				return;
 			}
 
+			Item ItemCode = itemlist [0];
+			doorder.description = ItemCode.IDesc;
+
 			int id = Convert.ToInt32 (ITEMUID);				
 			//so..title = spinner.SelectedItem.ToString ();
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				var invlist =db.Table<DelOrderDtls> ().Where (x => x.dono == doorder.dono&& x.ID==id).ToList<DelOrderDtls> ();
 				if (invlist.Count > 0) {
-					DelOrderDtls soItem = invlist [0];
-					soItem.description =  codedesc [1].Trim();
-					soItem.icode =  codedesc [0].Trim(); //spinner.SelectedItem.ToString ();
-					soItem.qty = stqQty;
-					db.Update (soItem);
+					DelOrderDtls doItem = invlist [0];
+					doItem.description = ItemCode.IDesc;//codedesc [1].Trim();
+					doItem.icode =  codedesc [0].Trim(); //spinner.SelectedItem.ToString ();
+
+					doItem.qty = stqQty;
+					db.Update (doItem);
 				}else db.Insert (doorder);
 			}
 
@@ -191,10 +206,10 @@ namespace wincom.mobile.erp
 		{
 			string dono = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var itemlist = db.Table<DelOrderDtls> ().Where (x => x.dono == dono);	
+				var itemlist = db.Table<DelOrderDtls> ().Where (x => x.dono == dono&&x.CompCode==compCode&&x.BranchCode==branchCode);	
 				double ttlamt= itemlist.Sum (x => x.qty);
 				//double ttltax= itemlist.Sum (x => x.tax);
-			   var invlist =db.Table<DelOrder> ().Where (x => x.dono == dono).ToList<DelOrder> ();
+				var invlist =db.Table<DelOrder> ().Where (x => x.dono == dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder> ();
 				if (invlist.Count > 0) {
 					invlist [0].amount = ttlamt;
 					invlist [0].taxamt = 0;

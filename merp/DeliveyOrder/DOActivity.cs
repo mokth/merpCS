@@ -22,6 +22,8 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<DelOrder> listData = new List<DelOrder> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		BluetoothAdapter mBluetoothAdapter;
 		BluetoothDevice mmDevice;
 		BluetoothSocket mmSocket;
@@ -37,8 +39,11 @@ namespace wincom.mobile.erp
 			// Create your application here
 			SetContentView (Resource.Layout.ListView);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewInv); 
 			butNew.Click += butCreateNewInv;
@@ -79,7 +84,7 @@ namespace wincom.mobile.erp
 			base.OnResume();
 			listData = new List<DelOrder> ();
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			SetViewDlg viewdlg = SetViewDelegate;
 			listView.Adapter = new GenericListAdapter<DelOrder> (this, listData, Resource.Layout.ListItemRow, viewdlg);
@@ -101,7 +106,7 @@ namespace wincom.mobile.erp
 			if (!compinfo.AllowDelete) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
-			if (DataHelper.GetDelOderPrintStatus (pathToDatabase, item.dono)) {
+			if (DataHelper.GetDelOderPrintStatus (pathToDatabase, item.dono,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
@@ -136,7 +141,7 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list = db.Table<DelOrder>().Where(x=>x.dono==doorder.dono).ToList<DelOrder>();
+				var list = db.Table<DelOrder>().Where(x=>x.dono==doorder.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder>();
 				if (list.Count > 0) {
 					db.Delete (list [0]);
 					var arrlist= listData.Where(x=>x.dono==doorder.dono).ToList<DelOrder>();
@@ -153,14 +158,17 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<DelOrder>().ToList<DelOrder>().Where(x=>x.isUploaded==false);
+				var list2 = db.Table<DelOrder>()
+					.Where(x=>x.isUploaded==false&&x.CompCode==compCode&&x.BranchCode==branchCode)
+					.OrderByDescending(x=>x.dono)
+					.ToList<DelOrder>();
 				foreach(var item in list2)
 				{
 					list.Add(item);
 				}
 
 			}
-			compinfo = DataHelper.GetCompany (pathToDatabase);
+			compinfo = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 		}
 
 
@@ -181,7 +189,7 @@ namespace wincom.mobile.erp
 			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			DelOrderDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
-				var ls= db.Table<DelOrderDtls> ().Where (x => x.dono==inv.dono).ToList<DelOrderDtls>();
+				var ls= db.Table<DelOrderDtls> ().Where (x => x.dono==inv.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrderDtls>();
 				list = new DelOrderDtls[ls.Count];
 				ls.CopyTo (list);
 			}
@@ -198,7 +206,7 @@ namespace wincom.mobile.erp
 		void updatePrintedStatus(DelOrder inv)
 		{
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<DelOrder> ().Where (x => x.dono == inv.dono).ToList<DelOrder> ();
+				var list = db.Table<DelOrder> ().Where (x => x.dono == inv.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder> ();
 				if (list.Count > 0) {
 					list [0].isPrinted = true;
 					db.Update (list [0]);
@@ -209,7 +217,7 @@ namespace wincom.mobile.erp
 		void StartPrint(DelOrder so,DelOrderDtls[] list,int noofcopy )
 		{
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
-			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid,compCode,branchCode);
 			string msg =prnHelp.OpenBTAndPrintDO (mmSocket, mmDevice, so, list,noofcopy);
 		   Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 			//AlertShow (msg);

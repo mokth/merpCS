@@ -23,11 +23,13 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<SaleOrder> listData = new List<SaleOrder> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		BluetoothAdapter mBluetoothAdapter;
 		BluetoothSocket mmSocket;
 		BluetoothDevice mmDevice;
 		//Thread workerThread;
-		Stream mmOutputStream;
+		//Stream mmOutputStream;
 		AdPara apara=null;
 		CompanyInfo compinfo;
 		protected override void OnCreate (Bundle bundle)
@@ -39,8 +41,11 @@ namespace wincom.mobile.erp
 			// Create your application here
 			SetContentView (Resource.Layout.ListView);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewInv); 
 			butNew.Click += butCreateNewInv;
@@ -82,7 +87,7 @@ namespace wincom.mobile.erp
 			base.OnResume();
 			listData = new List<SaleOrder> ();
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+					apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			SetViewDlg viewdlg = SetViewDelegate;
 			listView.Adapter = new GenericListAdapter<SaleOrder> (this, listData, Resource.Layout.ListItemRow, viewdlg);
@@ -104,7 +109,7 @@ namespace wincom.mobile.erp
 			if (!compinfo.AllowDelete) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
-			if (DataHelper.GetSaleOrderPrintStatus (pathToDatabase, item.sono)) {
+			if (DataHelper.GetSaleOrderPrintStatus (pathToDatabase, item.sono,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
@@ -139,7 +144,7 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list = db.Table<SaleOrder>().Where(x=>x.sono==inv.sono).ToList<SaleOrder>();
+				var list = db.Table<SaleOrder>().Where(x=>x.sono==inv.sono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrder>();
 				if (list.Count > 0) {
 					db.Delete (list [0]);
 					var arrlist= listData.Where(x=>x.sono==inv.sono).ToList<SaleOrder>();
@@ -156,14 +161,17 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<SaleOrder>().ToList<SaleOrder>().Where(x=>x.isUploaded==false);
+				var list2 = db.Table<SaleOrder> ()
+					.Where (x => x.isUploaded == false && x.CompCode == compCode && x.BranchCode == branchCode)
+					.OrderByDescending(x=>x.sono)
+					.ToList<SaleOrder> ();
 				foreach(var item in list2)
 				{
 					list.Add(item);
 				}
 
 			}
-			compinfo = DataHelper.GetCompany (pathToDatabase);
+			compinfo = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 		}
 
 
@@ -184,7 +192,7 @@ namespace wincom.mobile.erp
 			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			SaleOrderDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
-				var ls= db.Table<SaleOrderDtls> ().Where (x => x.sono==inv.sono).ToList<SaleOrderDtls>();
+				var ls= db.Table<SaleOrderDtls> ().Where (x => x.sono==inv.sono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrderDtls>();
 				list = new SaleOrderDtls[ls.Count];
 				ls.CopyTo (list);
 			}
@@ -201,7 +209,7 @@ namespace wincom.mobile.erp
 		void updatePrintedStatus(SaleOrder inv)
 		{
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<SaleOrder> ().Where (x => x.sono == inv.sono).ToList<SaleOrder> ();
+				var list = db.Table<SaleOrder> ().Where (x => x.sono == inv.sono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrder> ();
 				if (list.Count > 0) {
 					list [0].isPrinted = true;
 					db.Update (list [0]);
@@ -212,18 +220,18 @@ namespace wincom.mobile.erp
 		void StartPrint(SaleOrder so,SaleOrderDtls[] list,int noofcopy )
 		{
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
-			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+							PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid,compCode,branchCode);
 			string msg =prnHelp.OpenBTAndPrintSO (mmSocket, mmDevice, so, list,noofcopy);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 			//AlertShow (msg);
 		}
 
-		string getBTAddrFile(string printername)
-		{
-			var documents = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
-			string filename = Path.Combine (documents, printername+".baddr");
-			return filename;
-		}
+//		string getBTAddrFile(string printername)
+//		{
+//			var documents = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
+//			string filename = Path.Combine (documents, printername+".baddr");
+//			return filename;
+//		}
 
 		bool tryConnectBtAddr(string btAddrfile)
 		{

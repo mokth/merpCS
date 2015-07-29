@@ -7,7 +7,7 @@ namespace wincom.mobile.erp
 {
 	public class DataHelper
 	{
-		public static AdUser GetUser(string pathToDatabase)
+		public static AdUser GetUserEx(string pathToDatabase)
 		{
 		    AdUser user=null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
@@ -43,14 +43,15 @@ namespace wincom.mobile.erp
 			return inv;
 		}
 
-		public static int GetLastInvRunNo(string pathToDatabase, DateTime invdate )
+		public static int GetLastInvRunNo(string pathToDatabase, DateTime invdate,string comp,string bran )
 		{
 			DateTime Sdate = invdate.AddDays (1 - invdate.Day);
 			DateTime Edate = new DateTime (invdate.Year, invdate.Month, DateTime.DaysInMonth (invdate.Year, invdate.Month));
 			int runno = -1;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<Invoice> ().Where(x=>x.invdate>=Sdate && x.invdate<=Edate)
-						    .OrderByDescending(x=>x.invdate)
+				var list2 = db.Table<Invoice> ()
+							.Where(x=>x.invdate>=Sdate && x.invdate<=Edate&&x.CompCode==comp&&x.BranchCode==bran)
+						    .OrderByDescending(x=>x.invno)
 					        .ToList<Invoice> ();
 				if (list2.Count > 0) {
 					string invno =list2[0].invno;
@@ -65,14 +66,14 @@ namespace wincom.mobile.erp
 			return runno;
 		}
 
-		public static int GetLastSORunNo(string pathToDatabase, DateTime sodate )
+		public static int GetLastSORunNo(string pathToDatabase, DateTime sodate ,string comp,string bran )
 		{
 			DateTime Sdate = sodate.AddDays (1 - sodate.Day);
 			DateTime Edate = new DateTime (sodate.Year, sodate.Month, DateTime.DaysInMonth (sodate.Year, sodate.Month));
 			int runno = -1;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<SaleOrder> ().Where(x=>x.sodate>=Sdate && x.sodate<=Edate)
-					.OrderByDescending(x=>x.sodate)
+				var list2 = db.Table<SaleOrder> ().Where(x=>x.sodate>=Sdate && x.sodate<=Edate&&x.CompCode==comp&&x.BranchCode==bran)
+					.OrderByDescending(x=>x.sono)
 					.ToList<SaleOrder> ();
 				if (list2.Count > 0) {
 					string sono =list2[0].sono;
@@ -87,14 +88,14 @@ namespace wincom.mobile.erp
 			return runno;
 		}
 
-		public static int GetLastDORunNo(string pathToDatabase, DateTime dodate )
+		public static int GetLastDORunNo(string pathToDatabase, DateTime dodate,string comp,string bran )
 		{
 			DateTime Sdate = dodate.AddDays (1 - dodate.Day);
 			DateTime Edate = new DateTime (dodate.Year, dodate.Month, DateTime.DaysInMonth (dodate.Year, dodate.Month));
 			int runno = -1;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<DelOrder> ().Where(x=>x.dodate>=Sdate && x.dodate<=Edate)
-					.OrderByDescending(x=>x.dodate)
+				var list2 = db.Table<DelOrder> ().Where(x=>x.dodate>=Sdate && x.dodate<=Edate &&x.CompCode==comp&&x.BranchCode==bran)
+					.OrderByDescending(x=>x.dono)
 					.ToList<DelOrder> ();
 				if (list2.Count > 0) {
 					string dono =list2[0].dono;
@@ -109,14 +110,14 @@ namespace wincom.mobile.erp
 			return runno;
 		}
 
-		public static int GetLastCNRunNo(string pathToDatabase, DateTime invdate )
+		public static int GetLastCNRunNo(string pathToDatabase, DateTime invdate ,string comp,string bran )
 		{
 			DateTime Sdate = invdate.AddDays (1 - invdate.Day);
 			DateTime Edate = new DateTime (invdate.Year, invdate.Month, DateTime.DaysInMonth (invdate.Year, invdate.Month));
 			int runno = -1;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<CNNote> ().Where(x=>x.invdate>=Sdate && x.invdate<=Edate)
-					.OrderByDescending(x=>x.invdate)
+				var list2 = db.Table<CNNote> ().Where(x=>x.invdate>=Sdate && x.invdate<=Edate &&x.CompCode==comp&&x.BranchCode==bran)
+					.OrderByDescending(x=>x.cnno)
 					.ToList<CNNote> ();
 				if (list2.Count > 0) {
 					string invno =list2[0].cnno;
@@ -132,13 +133,13 @@ namespace wincom.mobile.erp
 		}
 
 
-		public static bool GetSaleOrderPrintStatus(string pathToDatabase,string sono)
+		public static bool GetSaleOrderPrintStatus(string pathToDatabase,string sono,string comp,string bran )
 		{
 			bool iSPrinted = false;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				var info = db.Table<CompanyInfo> ().Where(x=>x.CompCode==comp&&x.BranchCode==bran).FirstOrDefault ();
 				if (info.NotEditAfterPrint) {
-					var list = db.Table<SaleOrder> ().Where (x => x.sono == sono).ToList ();
+					var list = db.Table<SaleOrder> ().Where (x => x.sono == sono &&x.CompCode==comp&&x.BranchCode==bran).ToList ();
 					if (list.Count > 0) {
 						iSPrinted = list [0].isPrinted; 				
 					}
@@ -147,13 +148,13 @@ namespace wincom.mobile.erp
 			return iSPrinted;
 		}
 
-		public static bool GetDelOderPrintStatus(string pathToDatabase,string dono)
+		public static bool GetDelOderPrintStatus(string pathToDatabase,string dono,string comp,string bran )
 		{
 			bool iSPrinted = false;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				var info = db.Table<CompanyInfo> ().Where(x=>x.CompCode==comp&&x.BranchCode==bran).FirstOrDefault ();
 				if (info.NotEditAfterPrint) {
-					var list = db.Table<DelOrder> ().Where (x => x.dono == dono).ToList ();
+					var list = db.Table<DelOrder> ().Where (x => x.dono == dono&&x.CompCode==comp&&x.BranchCode==bran).ToList ();
 					if (list.Count > 0) {
 						iSPrinted = list [0].isPrinted; 				
 					}
@@ -162,13 +163,13 @@ namespace wincom.mobile.erp
 			return iSPrinted;
 		}
 
-		public static bool GetInvoicePrintStatus(string pathToDatabase,string invno)
+		public static bool GetInvoicePrintStatus(string pathToDatabase,string invno,string comp,string bran )
 		{
 			bool iSPrinted = false;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				var info = db.Table<CompanyInfo> ().Where(x=>x.CompCode==comp&&x.BranchCode==bran).FirstOrDefault ();
 				if (info.NotEditAfterPrint) {
-					var list = db.Table<Invoice> ().Where (x => x.invno == invno).ToList ();
+					var list = db.Table<Invoice> ().Where (x => x.invno == invno&&x.CompCode==comp&&x.BranchCode==bran).ToList ();
 					if (list.Count > 0) {
 						iSPrinted = list [0].isPrinted; 				
 					}
@@ -177,13 +178,13 @@ namespace wincom.mobile.erp
 			return iSPrinted;
 		}
 
-		public static bool GetCNNotePrintStatus(string pathToDatabase,string cnno)
+		public static bool GetCNNotePrintStatus(string pathToDatabase,string cnno,string comp,string bran )
 		{
 			bool iSPrinted = false;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				var info = db.Table<CompanyInfo> ().Where(x=>x.CompCode==comp&&x.BranchCode==bran).FirstOrDefault ();
 				if (info.NotEditAfterPrint) {
-					var list = db.Table<CNNote> ().Where (x => x.cnno == cnno).ToList ();
+					var list = db.Table<CNNote> ().Where (x => x.cnno == cnno&&x.CompCode==comp&&x.BranchCode==bran).ToList ();
 					if (list.Count > 0) {
 						iSPrinted = list [0].isPrinted; 				
 					}
@@ -192,14 +193,14 @@ namespace wincom.mobile.erp
 			return iSPrinted;
 		}
 
-		public static CompanyInfo GetCompany(string pathToDatabase)
-		{
-			CompanyInfo info = null;
-			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				info = db.Table<CompanyInfo> ().FirstOrDefault ();
-			}
-			return info;
-		}
+//		public static CompanyInfo GetCompany(string pathToDatabase)
+//		{
+//			CompanyInfo info = null;
+//			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+//				info = db.Table<CompanyInfo> ().FirstOrDefault ();
+//			}
+//			return info;
+//		}
 
 		public static CompanyInfo GetCompany(string pathToDatabase,string compCode, string branCode)
 		{
@@ -211,11 +212,11 @@ namespace wincom.mobile.erp
 		}
 
 
-		public static Trader GetTrader(string pathToDatabase,string custcode)
+		public static Trader GetTrader(string pathToDatabase,string custcode,string compCode, string branCode)
 		{
 			Trader info = null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				info = db.Table<Trader> ().Where(x=>x.CustCode==custcode).FirstOrDefault ();
+				info = db.Table<Trader> ().Where(x=>x.CustCode==custcode&&x.CompCode==compCode&&x.BranchCode==branCode).FirstOrDefault ();
 			}
 			return info;
 		}
@@ -236,27 +237,29 @@ namespace wincom.mobile.erp
 			return info;
 		}
 
-		public static AdPara GetAdPara(string pathToDatabase)
-		{
-			AdPara info = null;
-			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				info = db.Table<AdPara> ().FirstOrDefault ();
-			}
-			if (info == null) {
-				info = new AdPara ();
-			}
-			if (string.IsNullOrEmpty (info.Prefix))
-				info.Prefix = "CS";
-			if (string.IsNullOrEmpty (info.PrinterName))
-				info.PrinterName = "PT-II";
-			return info;
-		}
+//		public static AdPara GetAdPara(string pathToDatabase)
+//		{
+//			AdPara info = null;
+//			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+//				info = db.Table<AdPara> ().FirstOrDefault ();
+//			}
+//			if (info == null) {
+//				info = new AdPara ();
+//			}
+//			if (string.IsNullOrEmpty (info.Prefix))
+//				info.Prefix = "CS";
+//			if (string.IsNullOrEmpty (info.PrinterName))
+//				info.PrinterName = "PT-II";
+//			return info;
+//		}
 
-		public static AdNumDate GetNumDate(string pathToDatabase,DateTime trxdate)
+		public static AdNumDate GetNumDate(string pathToDatabase,DateTime trxdate,string comp,string bran)
 		{
 			AdNumDate info = null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<AdNumDate> ().Where (x =>x.TrxType=="INV" && x.Year == trxdate.Year && x.Month == trxdate.Month).ToList<AdNumDate> ();
+				var list = db.Table<AdNumDate> ().
+					Where (x =>x.TrxType=="INV" && x.Year == trxdate.Year && x.Month == trxdate.Month&&x.CompCode==comp&&x.BranchCode==bran)
+					.ToList<AdNumDate> ();
 				if (list.Count > 0)
 					info = list [0];
 				else {
@@ -274,11 +277,13 @@ namespace wincom.mobile.erp
 			return info;
 		}
 
-		public static AdNumDate GetNumDate(string pathToDatabase,DateTime trxdate,string trxtype)
+		public static AdNumDate GetNumDate(string pathToDatabase,DateTime trxdate,string trxtype,string comp,string bran)
 		{
 			AdNumDate info = null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<AdNumDate> ().Where (x =>x.TrxType==trxtype && x.Year == trxdate.Year && x.Month == trxdate.Month).ToList<AdNumDate> ();
+				var list = db.Table<AdNumDate> ()
+					.Where (x =>x.TrxType==trxtype && x.Year == trxdate.Year && x.Month == trxdate.Month&&x.CompCode==comp&&x.BranchCode==bran)
+					.ToList<AdNumDate> ();
 				if (list.Count > 0)
 					info = list [0];
 				else {

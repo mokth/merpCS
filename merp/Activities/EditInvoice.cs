@@ -73,7 +73,7 @@ namespace wincom.mobile.erp
 			ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			ccNo.AfterTextChanged+= CcNo_AfterTextChanged;
 
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			LoadTrader ();
 
 			List<string> icodes = new List<string> ();

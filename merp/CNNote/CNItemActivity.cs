@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +19,8 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<CNNoteDtls> listData = new List<CNNoteDtls> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		string invno ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
@@ -34,9 +35,11 @@ namespace wincom.mobile.erp
 			}
 			SetContentView (Resource.Layout.InvDtlView);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetCNNotePrintStatus (pathToDatabase,invno);
+			isNotAllowEditAfterPrinted  = DataHelper.GetCNNotePrintStatus (pathToDatabase,invno,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
 				NewItem(invno);
@@ -85,7 +88,7 @@ namespace wincom.mobile.erp
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetCNNotePrintStatus (pathToDatabase,invno);
+			isNotAllowEditAfterPrinted  = DataHelper.GetCNNotePrintStatus (pathToDatabase,invno,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			if (isNotAllowEditAfterPrinted)
 				butNew.Enabled = false;
@@ -112,7 +115,7 @@ namespace wincom.mobile.erp
 
 			//if allow edit and Invoice printed, remove edit
 			//printed invoice not allow to edit
-			if (DataHelper.GetCNNotePrintStatus (pathToDatabase, invno)) {
+			if (DataHelper.GetCNNotePrintStatus (pathToDatabase, invno,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popedit);
 				menu.Menu.RemoveItem (Resource.Id.popdelete);
 				menu.Menu.RemoveItem (Resource.Id.popadd);
@@ -183,16 +186,13 @@ namespace wincom.mobile.erp
 
 		void populate(List<CNNoteDtls> list)
 		{
-
-			//var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-			//pathToDatabase = Path.Combine(documents, "db_adonet.db");
-			comp = DataHelper.GetCompany (pathToDatabase);
+			comp = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list1 = db.Table<CNNote>().Where(x=>x.cnno==invno).ToList<CNNote>();
-				var list2 = db.Table<CNNoteDtls>().Where(x=>x.cnno==invno).ToList<CNNoteDtls>();
-				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE).ToList<Trader>();
+				var list1 = db.Table<CNNote>().Where(x=>x.cnno==invno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNote>();
+				var list2 = db.Table<CNNoteDtls>().Where(x=>x.cnno==invno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNoteDtls>();
+				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<Trader>();
 
 				double ttlamt = 0;
 				double ttltax = 0;

@@ -23,11 +23,13 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<CNNote> listData = new List<CNNote> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		BluetoothAdapter mBluetoothAdapter;
 		BluetoothSocket mmSocket;
 		BluetoothDevice mmDevice;
 		//Thread workerThread;
-		Stream mmOutputStream;
+		//Stream mmOutputStream;
 		AdPara apara=null;
 		CompanyInfo compinfo;
 		protected override void OnCreate (Bundle bundle)
@@ -39,8 +41,10 @@ namespace wincom.mobile.erp
 			// Create your application here
 			SetContentView (Resource.Layout.ListView);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewInv); 
 			butNew.Click += butCreateNewInv;
@@ -82,7 +86,7 @@ namespace wincom.mobile.erp
 			base.OnResume();
 			listData = new List<CNNote> ();
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			SetViewDlg viewdlg = SetViewDelegate;
 			listView.Adapter = new GenericListAdapter<CNNote> (this, listData, Resource.Layout.ListItemRow, viewdlg);
@@ -104,7 +108,7 @@ namespace wincom.mobile.erp
 			if (!compinfo.AllowDelete) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
-			if (DataHelper.GetCNNotePrintStatus (pathToDatabase, item.cnno)) {
+			if (DataHelper.GetCNNotePrintStatus (pathToDatabase, item.cnno,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
@@ -156,14 +160,16 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<CNNote>().ToList<CNNote>().Where(x=>x.isUploaded==false);
+				var list2 = db.Table<CNNote>().Where(x=>x.isUploaded==false&&x.CompCode==compCode&&x.BranchCode==branchCode)
+					.OrderByDescending(x=>x.cnno)
+					.ToList<CNNote>();
 				foreach(var item in list2)
 				{
 					list.Add(item);
 				}
 
 			}
-			compinfo = DataHelper.GetCompany (pathToDatabase);
+			compinfo = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 		}
 
 
@@ -197,7 +203,7 @@ namespace wincom.mobile.erp
 			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			CNNoteDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
-				var ls= db.Table<CNNoteDtls> ().Where (x => x.cnno==inv.cnno).ToList<CNNoteDtls>();
+				var ls= db.Table<CNNoteDtls> ().Where (x => x.cnno==inv.cnno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNoteDtls>();
 				list = new CNNoteDtls[ls.Count];
 				ls.CopyTo (list);
 			}
@@ -214,7 +220,7 @@ namespace wincom.mobile.erp
 		void updatePrintedStatus(CNNote inv)
 		{
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<CNNote> ().Where (x => x.cnno == inv.cnno).ToList<CNNote> ();
+				var list = db.Table<CNNote> ().Where (x => x.cnno == inv.cnno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNote> ();
 				if (list.Count > 0) {
 					list [0].isPrinted = true;
 					db.Update (list [0]);
@@ -225,7 +231,7 @@ namespace wincom.mobile.erp
 		void StartPrint(CNNote inv,CNNoteDtls[] list,int noofcopy )
 		{
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
-			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid,compCode,branchCode);
 			string msg =prnHelp.OpenBTAndPrintCN(mmSocket, mmDevice, inv, list,noofcopy);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}

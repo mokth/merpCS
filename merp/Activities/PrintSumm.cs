@@ -21,6 +21,8 @@ namespace wincom.mobile.erp
 		BluetoothSocket mmSocket;
 		BluetoothDevice mmDevice;
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		AdPara apara;
 		const int DATE_DIALOG_ID1 = 0;
 		const int DATE_DIALOG_ID2 = 1;
@@ -34,7 +36,9 @@ namespace wincom.mobile.erp
 			}
 			SetContentView (Resource.Layout.PrintInvSumm);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			Button butPrint= FindViewById<Button> (Resource.Id.printsumm); 
 			Button butInvBack= FindViewById<Button> (Resource.Id.printsumm_cancel); 
 			EditText frd = FindViewById<EditText> (Resource.Id.trxdatefr);
@@ -106,7 +110,7 @@ namespace wincom.mobile.erp
 				return;
 
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
-			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid,compCode,branchCode);
 			string msg = prnHelp.PrintInvSumm(mmSocket, mmDevice,printdate1,printdate2);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 

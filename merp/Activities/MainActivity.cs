@@ -25,7 +25,7 @@ namespace wincom.mobile.erp
 	{
 		//List<Item> items = null;
 
-		private Service1Client _client;
+		//private Service1Client _client;
 		string pathToDatabase;
 		string COMPCODE;
 		string BRANCODE;
@@ -104,7 +104,7 @@ namespace wincom.mobile.erp
 
 		void ButAbt_Click (object sender, EventArgs e)
 		{
-			CompanyInfo comp= DataHelper.GetCompany (pathToDatabase);
+			CompanyInfo comp= DataHelper.GetCompany (pathToDatabase,COMPCODE,BRANCODE);
 			View messageView = LayoutInflater.Inflate(Resource.Layout.About, null, false);
 			PackageInfo pInfo = PackageManager.GetPackageInfo (PackageName, 0);
 
@@ -229,7 +229,7 @@ namespace wincom.mobile.erp
 
 		void ClearPostedInv()
 		{
-			CompanyInfo para = DataHelper.GetCompany (pathToDatabase);
+			CompanyInfo para = DataHelper.GetCompany (pathToDatabase,COMPCODE,BRANCODE);
 			if (!para.AllowClrTrxHis) {
 				Toast.MakeText (this, "Access denied...", ToastLength.Long).Show ();	
 				return;

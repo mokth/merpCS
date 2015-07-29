@@ -38,7 +38,7 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.InvDtlView);
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno);
+			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
 				NewItem(invno);
@@ -96,7 +96,7 @@ namespace wincom.mobile.erp
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno);
+			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			if (isNotAllowEditAfterPrinted)
 				butNew.Enabled = false;
@@ -197,7 +197,7 @@ namespace wincom.mobile.erp
 		void populate(List<InvoiceDtls> list)
 		{
 			
-			comp = DataHelper.GetCompany (pathToDatabase);
+			comp = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{

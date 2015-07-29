@@ -69,7 +69,7 @@ namespace wincom.mobile.erp
 			ccNo.AfterTextChanged+= CcNo_AfterTextChanged;
 
 
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			LoadTrader ();
 
@@ -119,7 +119,7 @@ namespace wincom.mobile.erp
 		{
 			int count1 = 0;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				count1 = db.Table<Item>().Count ();
+				count1 = db.Table<Item>().Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode).Count ();
 			}
 			if (ccNo.Text != "") {
 				if (!CCardHelper.IsCardNumberValid (ccNo.Text)) {
@@ -204,7 +204,7 @@ namespace wincom.mobile.erp
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
 			DateTime invdate = Utility.ConvertToDate (trxdate.Text);
 			DateTime tmr = invdate.AddDays (1);
-			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate);
+			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate,compCode,branchCode);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
 			Spinner spinner2 = FindViewById<Spinner> (Resource.Id.newinv_type);
 			TextView txtinvno =FindViewById<TextView> (Resource.Id.newinv_no);
@@ -227,7 +227,7 @@ namespace wincom.mobile.erp
 
 				string invno = "";
 				int runno = adNum.RunNo + 1;
-				int currentRunNo =DataHelper.GetLastInvRunNo (pathToDatabase, invdate);
+				int currentRunNo =DataHelper.GetLastInvRunNo (pathToDatabase, invdate,compCode,branchCode);
 				if (currentRunNo >= runno)
 					runno = currentRunNo + 1;
 				

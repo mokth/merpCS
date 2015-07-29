@@ -16,6 +16,8 @@ namespace wincom.mobile.erp
 	public class CreateCNNote : Activity,IEventListener
 	{
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		List<Trader> items = null;
 		ArrayAdapter<String> dataAdapter;
 		DateTime _date ;
@@ -31,6 +33,9 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.CreateCNote);
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
 
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 			// Create your application here
 			_date = DateTime.Today;
 			spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
@@ -57,12 +62,12 @@ namespace wincom.mobile.erp
 				ShowInvLookUp();
 			};
 
-			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				items = db.Table<Trader> ().ToList<Trader> ();
+				items = db.Table<Trader> ().Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode).ToList<Trader> ();
 			}
 
 			List<string> icodes = new List<string> ();
@@ -85,7 +90,7 @@ namespace wincom.mobile.erp
 		{
 			int count1 = 0;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				count1 = db.Table<Item>().Count ();
+				count1 = db.Table<Item>().Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode).Count ();
 			}
 			if (count1 > 0)
 				CreateNewCN ();
@@ -146,7 +151,7 @@ namespace wincom.mobile.erp
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
 			DateTime invdate = Utility.ConvertToDate (trxdate.Text);
 			DateTime tmr = invdate.AddDays (1);
-			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate,"CN");
+			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate,"CN",compCode,branchCode);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
 			TextView txtinvno =FindViewById<TextView> (Resource.Id.newinv_no);
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
@@ -165,7 +170,7 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				string invno = "";
 				int runno = adNum.RunNo + 1;
-				int currentRunNo =DataHelper.GetLastCNRunNo (pathToDatabase, invdate);
+				int currentRunNo =DataHelper.GetLastCNRunNo (pathToDatabase, invdate,compCode,branchCode);
 				if (currentRunNo >= runno)
 					runno = currentRunNo + 1;
 				
@@ -180,6 +185,9 @@ namespace wincom.mobile.erp
 				inv.custcode = codes [0].Trim ();
 				inv.isUploaded = false;
 				inv.invno = cninvno.Text;
+				inv.CompCode = compCode;
+				inv.BranchCode = branchCode;
+
 				db.Insert (inv);
 				adNum.RunNo = runno;
 				if (adNum.ID >= 0)

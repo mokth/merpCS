@@ -19,6 +19,8 @@ namespace wincom.mobile.erp
 	public class SOEntryActivity : Activity,IEventListener
 	{
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		List<Item> items = null;
 		string EDITMODE ="";
 		string CUSTOMER ="";
@@ -38,6 +40,9 @@ namespace wincom.mobile.erp
 			}
 
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 
 			SALEORDERNO = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			ITEMUID = Intent.GetStringExtra ("itemuid") ?? "AUTO";
@@ -66,8 +71,7 @@ namespace wincom.mobile.erp
 			qty.AfterTextChanged+= Qty_AfterTextChanged;
 			price.Enabled = false;
 			//price.EditorAction += HandleEditorAction; 
-			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
-
+		
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
@@ -75,10 +79,7 @@ namespace wincom.mobile.erp
 				items = db.Table<Item> ().ToList<Item> ();
 			}
 
-			List<string> icodes = new List<string> ();
-			foreach (Item item in items) {
-				icodes.Add (item.ICode+" | "+item.IDesc);
-			}
+			List<string> icodes = LoadItems ();
 
 			dataAdapter = new ArrayAdapter<String>(this,Resource.Layout.spinner_item, icodes);
 
@@ -92,6 +93,22 @@ namespace wincom.mobile.erp
 				FIRSTLOAD="1";
 				LoadData (SALEORDERNO, ITEMUID);
 			}
+		}
+
+		List<string> LoadItems ()
+		{
+			//SqliteConnection.CreateFile(pathToDatabase);
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				items = db.Table<Item> ().Where (x => x.CompCode == compCode && x.BranchCode == branchCode).ToList<Item> ();
+			}
+			List<string> icodes = new List<string> ();
+			foreach (Item item in items) {
+				//icodes.Add (item.ICode + " | " + item.IDesc);
+				if (item.IDesc.Length > 40) {
+					icodes.Add (item.ICode + " | " + item.IDesc.Substring(0,40)+"...");
+				}else icodes.Add (item.ICode + " | " + item.IDesc);
+			}
+			return icodes;
 		}
 
 		void Qty_AfterTextChanged (object sender, Android.Text.AfterTextChangedEventArgs e)
@@ -147,12 +164,9 @@ namespace wincom.mobile.erp
 			TextView txtInvNo =  FindViewById<TextView> (Resource.Id.txtInvnp);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.txtcode);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
-			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			EditText amount = FindViewById<EditText> (Resource.Id.txtamount);
-			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
 			EditText taxamt = FindViewById<EditText> (Resource.Id.txttaxamt);
-			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			TextView tax =  FindViewById<TextView> (Resource.Id.txttax);
 
 			int id = Convert.ToInt32 (uid);
@@ -161,7 +175,13 @@ namespace wincom.mobile.erp
 				var invlist =db.Table<SaleOrderDtls> ().Where (x => x.sono == sono&& x.ID==id).ToList<SaleOrderDtls> ();
 				if (invlist.Count > 0) {
 					SaleOrderDtls soItem = invlist [0];
-					int index = dataAdapter.GetPosition (soItem.icode + " | " + soItem.description);
+					//int index = dataAdapter.GetPosition (soItem.icode + " | " + soItem.description);
+					int index = -1;
+					if (soItem.description.Length > 40)
+						index = dataAdapter.GetPosition (soItem.icode + " | " + soItem.description.Substring (0, 40) + "...");
+					else
+						index = dataAdapter.GetPosition (soItem.icode + " | " + soItem.description);
+					
 					Item item =items.Where (x => x.ICode == soItem.icode).FirstOrDefault ();
 					spinner.SetSelection (index);
 					qty.Text = soItem.qty.ToString ();
@@ -237,6 +257,8 @@ namespace wincom.mobile.erp
 				Toast.MakeText (this, "Invlaid Item Code...", ToastLength.Long).Show ();
 				return;
 			}
+			Item ItemCode = itemlist [0];
+			so.description = ItemCode.IDesc;
 
 			int id = Convert.ToInt32 (ITEMUID);				
 			//so..title = spinner.SelectedItem.ToString ();
@@ -248,7 +270,8 @@ namespace wincom.mobile.erp
 					soItem.netamount = netamount;
 					soItem.tax = taxamt;
 					soItem.taxgrp = txttax.Text;
-					soItem.description =  codedesc [1].Trim();
+					//soItem.description =  codedesc [1].Trim();
+					soItem.description =  ItemCode.IDesc;
 					soItem.icode =  codedesc [0].Trim(); //spinner.SelectedItem.ToString ();
 					soItem.price = uprice;
 					soItem.qty = stqQty;
@@ -271,10 +294,10 @@ namespace wincom.mobile.erp
 		{
 			string invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var itemlist = db.Table<SaleOrderDtls> ().Where (x => x.sono == invno);	
+				var itemlist = db.Table<SaleOrderDtls> ().Where (x => x.sono == invno&&x.CompCode==compCode&&x.BranchCode==branchCode);	
 				double ttlamt= itemlist.Sum (x => x.netamount);
 				double ttltax= itemlist.Sum (x => x.tax);
-			   var invlist =db.Table<SaleOrder> ().Where (x => x.sono == invno).ToList<SaleOrder> ();
+				var invlist =db.Table<SaleOrder> ().Where (x => x.sono == invno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrder> ();
 				if (invlist.Count > 0) {
 					invlist [0].amount = ttlamt;
 					invlist [0].taxamt = ttltax;

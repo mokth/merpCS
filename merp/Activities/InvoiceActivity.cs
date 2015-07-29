@@ -45,7 +45,7 @@ namespace wincom.mobile.erp
 			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 
 			populate (listData);
-			apara =  DataHelper.GetAdPara (pathToDatabase);
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewInv); 
 			butNew.Click += butCreateNewInv;
@@ -109,7 +109,7 @@ namespace wincom.mobile.erp
 			if (!compinfo.AllowDelete) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
-			if (DataHelper.GetInvoicePrintStatus (pathToDatabase, item.invno)) {
+			if (DataHelper.GetInvoicePrintStatus (pathToDatabase, item.invno,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
@@ -176,7 +176,10 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Invoice>().Where(x=>x.isUploaded==false&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList();
+				var list2 = db.Table<Invoice>()
+					.Where(x=>x.isUploaded==false&&x.CompCode==compCode&&x.BranchCode==branchCode)
+					.OrderByDescending(x=>x.invno)
+					.ToList();
 				foreach(var item in list2)
 				{
 					list.Add(item);
@@ -245,18 +248,18 @@ namespace wincom.mobile.erp
 		void StartPrint(Invoice inv,InvoiceDtls[] list,int noofcopy )
 		{
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
-			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid,compCode,branchCode);
 			string msg =prnHelp.OpenBTAndPrint (mmSocket, mmDevice, inv, list,noofcopy);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 			//AlertShow (msg);
 		}
 
-		string getBTAddrFile(string printername)
-		{
-			var documents = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
-			string filename = Path.Combine (documents, printername+".baddr");
-			return filename;
-		}
+//		string getBTAddrFile(string printername)
+//		{
+//			var documents = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
+//			string filename = Path.Combine (documents, printername+".baddr");
+//			return filename;
+//		}
 
 		bool tryConnectBtAddr(string btAddrfile)
 		{

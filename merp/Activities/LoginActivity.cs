@@ -18,7 +18,7 @@ namespace wincom.mobile.erp
 	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
 	public class LoginActivity : Activity,IEventListener
 	{
-		private Service1Client _client;
+		//private Service1Client _client;
 		string pathToDatabase;
 		static volatile bool _donwloadPro = false;
 		protected override void OnCreate (Bundle bundle)
@@ -48,7 +48,7 @@ namespace wincom.mobile.erp
 			if (!File.Exists (pathToDatabase)) {
 				createTable (pathToDatabase);
 			}
-			user = DataHelper.GetUser (pathToDatabase);
+			user = DataHelper.GetUserEx (pathToDatabase);
 //			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 //				var list2 = db.Table<AdUser> ().ToList<AdUser> ();
 //				if (list2.Count > 0) {

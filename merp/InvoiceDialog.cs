@@ -21,6 +21,8 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<Invoice> listData = new List<Invoice> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		GenericListAdapter<Invoice> adapter; 
 		EditText  txtSearch;
 		Button butSearch;
@@ -149,14 +151,17 @@ namespace wincom.mobile.erp
 		void populate(List<Invoice> list)
 		{
 
-			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-			pathToDatabase = Path.Combine(documents, "db_adonet.db");
+			pathToDatabase = ((GlobalvarsApp)this.Activity.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Activity.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Activity.Application).BRANCH_CODE;
 
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-
-				var list2 = db.Table<Invoice>().ToList<Invoice>();
+				var list2 = db.Table<Invoice>()
+					.Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode)
+					.OrderByDescending(x=>x.invno)
+					.ToList<Invoice>();
 				foreach(var item in list2)
 				{
 					list.Add(item);

@@ -18,18 +18,22 @@ namespace wincom.mobile.erp
 	{
 		string pathToDatabase;
 		string USERID;
+		string compCode;
+		string branchCode;
 		AdPara apara;
 		CompanyInfo compinfo;
 		string msg;
 		string sdcard="";
 		//StringBuilder errmsg = new StringBuilder ();
 
-		public PrintInvHelper (string adpathToDatabase,string userid)
+		public PrintInvHelper (string adpathToDatabase,string userid,string comp,string bran)
 		{
 			pathToDatabase = adpathToDatabase;
 			USERID = userid;
-			apara =  DataHelper.GetAdPara (pathToDatabase);
-			compinfo =DataHelper.GetCompany(pathToDatabase);
+			compCode = comp;
+			branchCode = bran;
+			apara =  DataHelper.GetAdPara (pathToDatabase,compCode ,branchCode);
+			compinfo =DataHelper.GetCompany(pathToDatabase,compCode ,branchCode);
 			sdcard = Path.Combine (Android.OS.Environment.ExternalStorageDirectory.Path, "erpdata\\log.txt");
 		}
 
@@ -472,7 +476,7 @@ namespace wincom.mobile.erp
 
 		void PrintCompHeader (ref string test)
 		{
-			CompanyInfo comp= DataHelper.GetCompany (pathToDatabase);
+			CompanyInfo comp= DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 			if (comp == null)
 				return;
 			string tel = string.IsNullOrEmpty (comp.Tel) ? " " : comp.Tel.Trim ();
@@ -504,7 +508,7 @@ namespace wincom.mobile.erp
 
 		void PrintCustomer (ref string test,string custcode)
 		{
-			Trader comp = DataHelper.GetTrader (pathToDatabase, custcode);
+			Trader comp = DataHelper.GetTrader (pathToDatabase, custcode,compCode,branchCode);
 			test += "------------------------------------------\n";
 			test += "CUSTOMER\n";
 			string tel = string.IsNullOrEmpty (comp.Tel) ? " " : comp.Tel.Trim ();

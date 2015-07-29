@@ -20,10 +20,12 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<SaleOrderDtls> listData = new List<SaleOrderDtls> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		string invno ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
-		CompanyInfo comp;
+		//CompanyInfo comp;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -31,6 +33,10 @@ namespace wincom.mobile.erp
 				Finish ();
 			}
 			SetContentView (Resource.Layout.InvDtlView);
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
 
@@ -81,15 +87,13 @@ namespace wincom.mobile.erp
 		void populate(List<SaleOrderDtls> list)
 		{
 
-			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-			pathToDatabase = Path.Combine(documents, "db_adonet.db");
-			comp = DataHelper.GetCompany (pathToDatabase);
+			//comp = DataHelper.GetCompany (pathToDatabase);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list1 = db.Table<SaleOrder>().Where(x=>x.sono==invno).ToList<SaleOrder>();
-				var list2 = db.Table<SaleOrderDtls>().Where(x=>x.sono==invno).ToList<SaleOrderDtls>();
-				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE).ToList<Trader>();
+				var list1 = db.Table<SaleOrder>().Where(x=>x.sono==invno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrder>();
+				var list2 = db.Table<SaleOrderDtls>().Where(x=>x.sono==invno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<SaleOrderDtls>();
+				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<Trader>();
 
 				double ttlamt = 0;
 				double ttltax = 0;

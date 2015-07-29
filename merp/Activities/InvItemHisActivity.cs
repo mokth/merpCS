@@ -25,7 +25,7 @@ namespace wincom.mobile.erp
 		string invno ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
-		CompanyInfo comp;
+		//CompanyInfo comp;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -86,7 +86,7 @@ namespace wincom.mobile.erp
 			
 		void populate(List<InvoiceDtls> list)
 		{
-			comp = DataHelper.GetCompany (pathToDatabase);
+			//comp = DataHelper.GetCompany (pathToDatabase);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{

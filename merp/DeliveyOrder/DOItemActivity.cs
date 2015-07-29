@@ -20,6 +20,8 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<DelOrderDtls> listData = new List<DelOrderDtls> ();
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		string dono ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
@@ -33,10 +35,12 @@ namespace wincom.mobile.erp
 				Finish ();
 			}
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 			SetContentView (Resource.Layout.InvDtlView);
 			dono = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetDelOderPrintStatus (pathToDatabase,dono);
+			isNotAllowEditAfterPrinted  = DataHelper.GetDelOderPrintStatus (pathToDatabase,dono,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
 				NewItem(dono);
@@ -85,7 +89,7 @@ namespace wincom.mobile.erp
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			dono = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
-			isNotAllowEditAfterPrinted  = DataHelper.GetDelOderPrintStatus (pathToDatabase,dono);
+			isNotAllowEditAfterPrinted  = DataHelper.GetDelOderPrintStatus (pathToDatabase,dono,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			if (isNotAllowEditAfterPrinted)
 				butNew.Enabled = false;
@@ -185,16 +189,14 @@ namespace wincom.mobile.erp
 
 		void populate(List<DelOrderDtls> list)
 		{
+			
+			comp = DataHelper.GetCompany (pathToDatabase,compCode,branchCode);
 
-//			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-//			pathToDatabase = Path.Combine(documents, "db_adonet.db");
-			comp = DataHelper.GetCompany (pathToDatabase);
-			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list1 = db.Table<DelOrder>().Where(x=>x.dono==dono).ToList<DelOrder>();
-				var list2 = db.Table<DelOrderDtls>().Where(x=>x.dono==dono).ToList<DelOrderDtls>();
-				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE).ToList<Trader>();
+				var list1 = db.Table<DelOrder>().Where(x=>x.dono==dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder>();
+				var list2 = db.Table<DelOrderDtls>().Where(x=>x.dono==dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrderDtls>();
+				var list3 = db.Table<Trader>().Where(x=>x.CustCode==CUSTCODE&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<Trader>();
 
 				double ttlamt = 0;
 				double ttltax = 0;
