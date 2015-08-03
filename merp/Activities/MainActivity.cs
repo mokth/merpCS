@@ -391,14 +391,17 @@ namespace wincom.mobile.erp
 		{
 			//var intent = new Intent (this, typeof(LoginActivity));
 			//StartActivity (intent);
-			((GlobalvarsApp)this.Application).ISLOGON = false;
-			Finish ();
-			Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
-			Parent.Finish ();
-			Intent intent = new Intent(Intent.ActionMain);
- 			intent.AddCategory(Intent.CategoryHome);
-			intent.SetFlags(ActivityFlags.NewTask);
-			StartActivity(intent);
+			try {
+				((GlobalvarsApp)this.Application).ISLOGON = false;
+				Finish ();
+			    // Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
+				//Parent.Finish ();
+				Intent intent = new Intent (Intent.ActionMain);
+				intent.AddCategory (Intent.CategoryHome);
+			    intent.SetFlags (ActivityFlags.NewTask);
+				StartActivity (intent);
+			} catch {
+			}
 
 		}
 
