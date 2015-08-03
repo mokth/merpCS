@@ -17,7 +17,7 @@ using Java.Util;
 namespace wincom.mobile.erp
 {
 	[Activity (Label = "DELIVERT ORDER LIST")]			
-	public class DOAllActivity : Activity
+	public class DOAllActivity : Activity,IEventListener
 	{
 		ListView listView ;
 		List<DelOrder> listData = new List<DelOrder> ();
@@ -31,17 +31,22 @@ namespace wincom.mobile.erp
 		//Stream mmOutputStream;
 		AdPara apara=null;
 		CompanyInfo compinfo;
+		DateTime sdate;
+		DateTime edate;
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			if (!((GlobalvarsApp)this.Application).ISLOGON) {
 				Finish ();
 			}
+			EventManagerFacade.Instance.GetEventManager().AddListener(this);
 			// Create your application here
 			SetContentView (Resource.Layout.ListView);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
 			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+			Utility.GetDateRange (ref sdate,ref edate);
 			populate (listData);
 			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			listView = FindViewById<ListView> (Resource.Id.feedList);
@@ -73,6 +78,9 @@ namespace wincom.mobile.erp
 			view.FindViewById<TextView> (Resource.Id.TaxAmount).Text = "";
 
 			view.FindViewById<TextView> (Resource.Id.TtlAmount).Text ="";
+			ImageView img = view.FindViewById<ImageView> (Resource.Id.printed);
+			if (!item.isPrinted)
+				img.Visibility = ViewStates.Invisible;
 		}
 
 		protected override void OnResume()
@@ -97,18 +105,26 @@ namespace wincom.mobile.erp
 		void OnListItemLongClick(object sender, AdapterView.ItemLongClickEventArgs e) {
 			DelOrder item = listData.ElementAt (e.Position);
 			PopupMenu menu = new PopupMenu (e.Parent.Context, e.View);
-			menu.Inflate (Resource.Menu.popupInv);
-			menu.Menu.RemoveItem (Resource.Id.popInvdelete);
-			menu.Menu.RemoveItem (Resource.Id.popInvadd);
+			menu.Inflate (Resource.Menu.popupHis);
+
 			menu.MenuItemClick += (s1, arg1) => {
 				
 				if (arg1.Item.TitleFormatted.ToString ().ToLower () == "print") {
 					PrintInv (item,1);	
 				}else if (arg1.Item.TitleFormatted.ToString ().ToLower () == "print 2 copy") {
 					PrintInv (item,2);	
-				}  
+				}  else if (arg1.Item.TitleFormatted.ToString ().ToLower () == "filter") {
+					ShowDateRangeLookUp();
+				} 
 			};
 			menu.Show ();
+		}
+
+		void ShowDateRangeLookUp()
+		{
+			var intent = new Intent (this, typeof(DateRange));
+			intent.PutExtra ("eventid", "2023");
+			StartActivity (intent);
 		}
 
 		void populate(List<DelOrder> list)
@@ -116,7 +132,9 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
 				var list2 = db.Table<DelOrder>()
-					.Where(x=>x.isUploaded==true&&x.CompCode==compCode&&x.BranchCode==branchCode)
+					.Where(x=>x.isUploaded==true&&x.CompCode==compCode&&x.BranchCode==branchCode
+						&&x.dodate>=sdate&&x.dodate<=edate)
+					.OrderByDescending (x => x.dono)
 					.ToList<DelOrder>();
 				foreach(var item in list2)
 				{
@@ -142,8 +160,36 @@ namespace wincom.mobile.erp
 			findBTPrinter ();
 			if (mmDevice != null) {
 				StartPrint (so, list,noofcopy);
+				if (!so.isPrinted) {
+					updatePrintedStatus (so);
+					var found =listData.Where (x => x.dono==so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList ();
+					if (found.Count > 0) {
+						found [0].isPrinted = true;
+						SetViewDlg viewdlg = SetViewDelegate;
+						listView.Adapter = new GenericListAdapter<DelOrder> (this, listData, Resource.Layout.ListItemRow, viewdlg);
+					}
+				}
 			}
 		}
+
+		void updatePrintedStatus(DelOrder so)
+		{
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list = db.Table<DelOrder> ().Where (x => x.dono == so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder> ();
+				if (list.Count > 0) {
+					//if only contains items then allow to update the printed status.
+					//this to allow the invoice;s item can be added. if not can not be posted(upload)
+					var list2 = db.Table<DelOrderDtls> ()
+						.Where (x => x.dono == so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode)
+						.ToList<DelOrderDtls> ();
+					if (list2.Count > 0) {
+						list [0].isPrinted = true;
+						db.Update (list [0]);
+					}
+				}
+			}
+		}
+
 
 		void StartPrint(DelOrder so,DelOrderDtls[] list,int noofcopy )
 		{
@@ -159,6 +205,23 @@ namespace wincom.mobile.erp
 			string msg = "";
 			mmDevice = util.FindBTPrinter (printername,ref  msg);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+		}
+		public event nsEventHandler eventHandler;
+
+		public void FireEvent(object sender,EventParam eventArgs)
+		{
+			if (eventHandler != null)
+				eventHandler (sender, eventArgs);
+		}
+
+		public void PerformEvent(object sender, EventParam e)
+		{
+			switch (e.EventID) {
+			case 2023:
+				sdate =Utility.ConvertToDate(e.Param ["DATE1"].ToString ());
+				edate=Utility.ConvertToDate(e.Param ["DATE2"].ToString ());
+				break;
+			}
 		}
 
 	}

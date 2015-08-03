@@ -140,6 +140,9 @@
     <Compile Include="Helper\UploadCNHelper.cs" />
     <Compile Include="Activities\EditInvoice.cs" />
     <Compile Include="Helper\CCardHelper.cs" />
+    <Compile Include="Activities\DateRange.cs" />
+    <Compile Include="CNNote\EditCNNotes.cs" />
+    <Compile Include="DeliveyOrder\EditDelOrder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -300,6 +303,9 @@
     <AndroidResource Include="Resources\layout-large-port\DOEntry.axml" />
     <AndroidResource Include="Resources\layout\CreateDO.axml" />
     <AndroidResource Include="Resources\layout-large-port\CreateDO.axml" />
+    <AndroidResource Include="Resources\layout\DateRange.axml" />
+    <AndroidResource Include="Resources\menu\popupHis.xml" />
+    <AndroidResource Include="Resources\layout\ListCustViewEx.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

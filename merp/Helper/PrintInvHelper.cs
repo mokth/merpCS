@@ -90,8 +90,9 @@ namespace wincom.mobile.erp
 			test += dline;
 			PrintTotal (ref test, ttlAmt, ttltax);
 			PrintTaxSumm (ref test, list);
-			PrintFooter (ref test);
-			test += "\nTHANK YOU\n\n\n\n";
+			PrintInstllPan (ref test, inv, ttlAmt + ttltax);
+			PrintFooter (ref test,inv);
+			//test += "\nTHANK YOU\n\n\n\n";
 		}
 
 		void PrintSO (SaleOrder so, SaleOrderDtls[] list, ref string test)
@@ -132,8 +133,9 @@ namespace wincom.mobile.erp
 			}
 			test += dline;
 			PrintDOTotal (ref test, ttlAmt);
+
 			PrintFooter (ref test);
-			test += "\nTHANK YOU\n\n\n\n";
+			//test += "\nTHANK YOU\n\n\n\n";
 		}
 
 
@@ -433,12 +435,12 @@ namespace wincom.mobile.erp
 				string[] strs = pline2.Split (new char[]{ ' ' });
 				string tmp = "";
 
-				string sqty = itm.qty.ToString ("n").PadLeft (5, ' ');
+				string sqty = itm.qty.ToString ("n0").PadLeft (5, ' ');
 				foreach (string s in strs) {
 					if ((tmp + s + " ").Length > 33) {
 						test  = test + scount + tmp.PadRight (33, ' ') + sqty+"\n"; 
 						scount = "".PadRight (4, ' ');
-						sqty = "".PadRight (5, ' ');
+						sqty = "".PadRight (8, ' ');
 						tmp = s+" ";
 					} else {
 						tmp = tmp + s+" ";
@@ -447,7 +449,8 @@ namespace wincom.mobile.erp
 				test = test + "".PadRight (4, ' ') + tmp + "\n";
 
 			} else {
-				test = count.ToString ().PadRight (4, ' ') + pline2.PadRight (33, ' ')+scount+ "\n";
+				string sqty = itm.qty.ToString ("n0").PadLeft (5, ' ');
+				test = count.ToString ().PadRight (4, ' ') + pline2.PadRight (33, ' ')+sqty+ "\n";
 
 			}
 
@@ -533,13 +536,29 @@ namespace wincom.mobile.erp
 			test += "GST NO:" + gst+"\n";
 			test += "------------------------------------------\n";
 		}
-		void PrintFooter (ref string test)
+		void PrintFooter (ref string test,Invoice inv)
 		{
-			test += "\n\n\n\n";
+			Trader trd = DataHelper.GetTrader(pathToDatabase, inv.custcode, inv.CompCode, inv.BranchCode);
+			test += "NOTE:\n";
+			test += "ALL PAYMENT IS MADE OR GOODS SOLD ARE\n";
+			test += "NOT RETURNABLE OR NOT EXCHANGEABLE\n\n";
+			test += "CUSTOMER SIGNATURE,\n\n\n\n\n";
 			test += "------------------------------------------\n";
-			test += "     RECEIVED BY (COMPANY CHOP AND SIGN)  \n";
-
+			test += " NAME: "+inv.description+"\n";
+			test += " IC NO/PASSPORT: "+((trd!=null)?trd.NRIC:"")+"\n";
+			test += " DATE : " + DateTime.Now.ToString ("dd-MM-yyyy")+"\n";
+			test += " TIME : "+ DateTime.Now.ToString ("hh:mm tt")+"\n\n\n\n\n";
 		
+		}
+
+		void PrintFooter (ref string test)
+		{			
+			//test += "\n\n";
+			test += "NOTE:\n";
+			test += "ALL PAYMENT IS MADE OR GOODS SOLD ARE\n";
+			test += "NOT RETURNABLE OR NOT EXCHANGEABLE\n\n\n\n\n\n\n";
+
+
 		}
 		void PrintHeader (ref string test,Invoice inv)
 		{
@@ -629,7 +648,7 @@ namespace wincom.mobile.erp
 				test += doOrder.remark+"\n";
 			}
 			test += "------------------------------------------\n";
-			test += "NO  DESCRIPTION                       QTY \n";
+			test += "NO  DESCRIPTION                        QTY\n";
 			test += "------------------------------------------\n";
 			     //  1234
 				//	  	 12345678901234567890123456789012312345
@@ -671,9 +690,9 @@ namespace wincom.mobile.erp
 		{
 
 			test += "------------------------------------------\n";
-			test += "               TOTAL EXCL GST "+Math.Round(ttlAmt,2).ToString("n2").PadLeft (12, ' ')+"\n";
-			test += "               TOTAL TAX      "+Math.Round(ttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
-			test += "               TOTAL INCL GST "+Math.Round(ttlAmt+ttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "           TOTAL EXCL GST (RM) "+Math.Round(ttlAmt,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "           TOTAL TAX      (RM) "+Math.Round(ttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "           TOTAL INCL GST (RM)"+Math.Round(ttlAmt+ttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
 			test += "------------------------------------------\n";
 		}
 
@@ -681,7 +700,7 @@ namespace wincom.mobile.erp
 		{
 
 			test += "------------------------------------------\n";
-			test += "                   TOTAL QTY  "+ttlQty.ToString("n").PadLeft (12, ' ')+"\n";
+			test += "                   TOTAL QTY  "+ttlQty.ToString("n0").PadLeft (12, ' ')+"\n";
 			test += "------------------------------------------\n";
 		}
 		void PrintTotal (ref string test,double cnttlAmt,double cnttlTax,double InvttlAmt,double invttlTax)
@@ -722,6 +741,17 @@ namespace wincom.mobile.erp
 				pline = "";
 			}
 			test += "-------------------------------\n";
+		}
+
+		void PrintInstllPan(ref string test,Invoice inv,double ttlAmt )
+		{
+			double monthAmt = ttlAmt / inv.InstMonth;
+			test += "------------------------------------------\n";
+			test += "INSTALLMENT DETAILS\n";
+			test += "INSTALLMENT PLAN          :" + inv.InstMonth.ToString () + " MONTHS"+"\n";
+			test += "MONTHLY REPAYMENT AMT (RM): "+Math.Round(monthAmt,2).ToString("n2")+"\n";
+			test += "------------------------------------------\n";
+			
 		}
 
 		void PrintSOTaxSumm(ref string test,SaleOrderDtls[] list )

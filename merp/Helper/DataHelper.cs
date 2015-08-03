@@ -35,13 +35,58 @@ namespace wincom.mobile.erp
 		{
 			Invoice inv=null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<Invoice> ().ToList<Invoice>().Where(x=>x.CompCode==comp&&x.BranchCode==bran&&x.invno==invno).ToList();
+				var list2 = db.Table<Invoice> ()
+					.Where(x=>x.CompCode==comp&&x.BranchCode==bran&&x.invno==invno)
+					.ToList<Invoice>();
 				if (list2.Count > 0) {
 					inv = list2 [0];
 				}
 			}
 			return inv;
 		}
+
+		public static CNNote GetCNNote(string pathToDatabase,string cnno,string comp,string bran)
+		{
+			CNNote inv=null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<CNNote> ().
+					 Where(x=>x.cnno==cnno&&x.BranchCode==bran&&x.CompCode==comp)
+					.ToList<CNNote>();
+				if (list2.Count > 0) {
+					inv = list2 [0];
+				}
+			}
+			return inv;
+		}
+
+		public static DelOrder GetDelOrder(string pathToDatabase,string dono,string comp,string bran)
+		{
+			DelOrder dorder=null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<DelOrder> ()
+					.Where(x=>x.CompCode==comp&&x.BranchCode==bran&&x.dono==dono)
+					.ToList<DelOrder>();
+				if (list2.Count > 0) {
+					dorder = list2 [0];
+				}
+			}
+			return dorder;
+		}
+
+		public static Trader GetTrader(string pathToDatabase,string custcode,string comp,string bran)
+		{
+			Trader trd=null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<Trader> ()
+					.Where(x=>x.CompCode==comp&&x.BranchCode==bran&&x.CustCode==custcode)
+					.ToList<Trader>();
+				if (list2.Count > 0) {
+					trd = list2 [0];
+				}
+			}
+			return trd;
+		}
+
 
 		public static int GetLastInvRunNo(string pathToDatabase, DateTime invdate,string comp,string bran )
 		{
@@ -207,16 +252,6 @@ namespace wincom.mobile.erp
 			CompanyInfo info = null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				info = db.Table<CompanyInfo> ().Where(x=>x.CompCode==compCode&&x.BranchCode==branCode).FirstOrDefault ();
-			}
-			return info;
-		}
-
-
-		public static Trader GetTrader(string pathToDatabase,string custcode,string compCode, string branCode)
-		{
-			Trader info = null;
-			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				info = db.Table<Trader> ().Where(x=>x.CustCode==custcode&&x.CompCode==compCode&&x.BranchCode==branCode).FirstOrDefault ();
 			}
 			return info;
 		}

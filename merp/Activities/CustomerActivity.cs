@@ -35,7 +35,7 @@ namespace wincom.mobile.erp
 			if (!((GlobalvarsApp)this.Application).ISLOGON) {
 				Finish ();
 			}
-			SetContentView (Resource.Layout.ListCustView);
+			SetContentView (Resource.Layout.ListCustViewEx);
 			// Create your application here
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			compCode =((GlobalvarsApp)Application).COMPANY_CODE;
@@ -46,9 +46,14 @@ namespace wincom.mobile.erp
 			listView = FindViewById<ListView> (Resource.Id.CustList);
 
 			Button butInvBack= FindViewById<Button> (Resource.Id.butCustBack); 
+			Button butInvAdd= FindViewById<Button> (Resource.Id.butCustAdd); 
 			txtSearch= FindViewById<EditText > (Resource.Id.txtSearch);
 			butInvBack.Click += (object sender, EventArgs e) => {
 				base.OnBackPressed();
+			};
+
+			butInvAdd.Click+= (object sender, EventArgs e) => {
+				NewLocalCust();
 			};
 
 			listView.ItemClick+= ListView_ItemClick; ;

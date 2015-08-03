@@ -212,6 +212,12 @@ namespace wincom.mobile.erp
 			EditText ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			EditText month =  FindViewById<EditText> (Resource.Id.newinv_month);
 
+			if (month.Text.Trim () == "") {
+			
+				Toast.MakeText (this,"The installment plan month is empty...", ToastLength.Long).Show ();	
+				return;
+			}
+
 			string prefix = apara.Prefix.Trim ().ToUpper ();
 			if (spinner.SelectedItem == null) {
 				Toast.MakeText (this, "No Customer code selected...", ToastLength.Long).Show ();			

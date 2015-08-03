@@ -24,7 +24,8 @@
             android:height="80dp"
             android:textSize="24sp"
             android:drawableLeft="@drawable/shop"
-            android:id="@+id/butSOlist" />
+            android:id="@+id/butSOlist"
+            android:visibility="gone" />
         <Button
             android:text="DELIVERY ORDER LIST"
             android:layout_width="match_parent"
@@ -42,7 +43,8 @@
             android:height="80dp"
             android:textSize="24sp"
             android:drawableLeft="@drawable/shop"
-            android:id="@+id/butCNlist" />
+            android:id="@+id/butCNlist"
+            android:visibility="gone" />
         <Button
             android:text="INVOICE SUMMARY"
             android:layout_width="match_parent"

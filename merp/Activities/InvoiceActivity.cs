@@ -106,9 +106,12 @@ namespace wincom.mobile.erp
 			PopupMenu menu = new PopupMenu (e.Parent.Context, e.View);
 			menu.Inflate (Resource.Menu.popupInv);
 
-			if (!compinfo.AllowDelete) {
-				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+			menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+
+			if (!compinfo.AllowEdit) {
+				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
+
 			if (DataHelper.GetInvoicePrintStatus (pathToDatabase, item.invno,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 				menu.Menu.RemoveItem (Resource.Id.popInvedit);
@@ -230,6 +233,12 @@ namespace wincom.mobile.erp
 			if (mmDevice != null) {
 				StartPrint (inv, list,noofcopy);
 				updatePrintedStatus (inv);
+				var found =listData.Where (x => x.invno == inv.invno&&x.CompCode==inv.CompCode&&x.BranchCode==inv.BranchCode).ToList ();
+				if (found.Count > 0) {
+					found [0].isPrinted = true;
+					SetViewDlg viewdlg = SetViewDelegate;
+					listView.Adapter = new GenericListAdapter<Invoice> (this, listData, Resource.Layout.ListItemRow, viewdlg);
+				}
 			}
 		
 		}
@@ -239,8 +248,13 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				var list = db.Table<Invoice> ().Where (x => x.invno == inv.invno&&x.CompCode==inv.CompCode&&x.BranchCode==inv.BranchCode).ToList<Invoice> ();
 				if (list.Count > 0) {
-					list [0].isPrinted = true;
-					db.Update (list [0]);
+					var list2 = db.Table<InvoiceDtls> ().Where (x => x.invno == inv.invno
+						&&x.CompCode==inv.CompCode&&x.BranchCode==inv.BranchCode)
+						.ToList<InvoiceDtls> ();
+					if (list2.Count > 0) {
+						list [0].isPrinted = true;
+						db.Update (list [0]);
+					}
 				}
 			}
 		}

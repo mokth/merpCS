@@ -105,11 +105,16 @@ namespace wincom.mobile.erp
 			PopupMenu menu = new PopupMenu (e.Parent.Context, e.View);
 			menu.Inflate (Resource.Menu.popupInv);
 
-			if (!compinfo.AllowDelete) {
-				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+
+			menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+
+			if (!compinfo.AllowEdit) {
+				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
+
 			if (DataHelper.GetCNNotePrintStatus (pathToDatabase, item.cnno,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
 				if (arg1.Item.TitleFormatted.ToString().ToLower()=="add")
@@ -125,11 +130,22 @@ namespace wincom.mobile.erp
 				} else if (arg1.Item.TitleFormatted.ToString().ToLower()=="delete")
 				{
 					Delete(item);
+				}else if (arg1.Item.TitleFormatted.ToString().ToLower()=="edit")
+				{
+					Edit(item);
 				}
 
 			};
 			menu.Show ();
 		}
+
+		void Edit(CNNote cn)
+		{
+			var intent = new Intent (this, typeof(EditCNNote));
+			intent.PutExtra ("cnno", cn.cnno);
+			StartActivity (intent);
+		}
+
 
 		void Delete(CNNote inv)
 		{
@@ -213,6 +229,12 @@ namespace wincom.mobile.erp
 			if (mmDevice != null) {
 				StartPrint (inv, list,noofcopy);
 				updatePrintedStatus (inv);
+				var found =listData.Where (x => x.cnno == inv.cnno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList ();
+				if (found.Count > 0) {
+					found [0].isPrinted = true;
+					SetViewDlg viewdlg = SetViewDelegate;
+					listView.Adapter = new GenericListAdapter<CNNote> (this, listData, Resource.Layout.ListItemRow, viewdlg);
+				}
 			}
 		
 		}
@@ -222,8 +244,12 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				var list = db.Table<CNNote> ().Where (x => x.cnno == inv.cnno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNote> ();
 				if (list.Count > 0) {
-					list [0].isPrinted = true;
-					db.Update (list [0]);
+					var list2 = db.Table<CNNoteDtls> ().Where (x => x.cnno == inv.cnno&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<CNNoteDtls> ();
+					if (list2.Count > 0) {
+						list [0].isPrinted = true;
+						db.Update (list [0]);
+					}
+
 				}
 			}
 		}

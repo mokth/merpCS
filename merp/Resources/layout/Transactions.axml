@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/shop"
-            android:id="@+id/butSO" />
+            android:id="@+id/butSO"
+            android:visibility="gone" />
         <Button
             android:text="DELIVERY ORDER"
             android:layout_width="match_parent"
@@ -34,7 +35,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/shop"
-            android:id="@+id/butCN" />
+            android:id="@+id/butCN"
+            android:visibility="gone" />
         <Button
             android:text="MAIN MENU"
             android:layout_width="match_parent"

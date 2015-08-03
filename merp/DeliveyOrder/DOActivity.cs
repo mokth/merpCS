@@ -103,11 +103,14 @@ namespace wincom.mobile.erp
 			PopupMenu menu = new PopupMenu (e.Parent.Context, e.View);
 			menu.Inflate (Resource.Menu.popupInv);
 
-			if (!compinfo.AllowDelete) {
-				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+			menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+
+			if (!compinfo.AllowEdit) {
+				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
 			if (DataHelper.GetDelOderPrintStatus (pathToDatabase, item.dono,compCode,branchCode)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+				menu.Menu.RemoveItem (Resource.Id.popInvedit);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
 				if (arg1.Item.TitleFormatted.ToString().ToLower()=="add")
@@ -123,11 +126,22 @@ namespace wincom.mobile.erp
 				} else if (arg1.Item.TitleFormatted.ToString().ToLower()=="delete")
 				{
 					Delete(item);
+				}else if (arg1.Item.TitleFormatted.ToString().ToLower()=="edit")
+				{
+					Edit(item);
 				}
 
 			};
 			menu.Show ();
 		}
+
+		void Edit(DelOrder doorder)
+		{
+			var intent = new Intent (this, typeof(EditDelOrder));
+			intent.PutExtra ("dono", doorder.dono);
+			StartActivity (intent);
+		}
+
 
 		void Delete(DelOrder inv)
 		{
@@ -184,12 +198,12 @@ namespace wincom.mobile.erp
 		}
 
 
-		void PrintInv(DelOrder inv,int noofcopy)
+		void PrintInv(DelOrder so,int noofcopy)
 		{
 			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			DelOrderDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
-				var ls= db.Table<DelOrderDtls> ().Where (x => x.dono==inv.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrderDtls>();
+				var ls= db.Table<DelOrderDtls> ().Where (x => x.dono==so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrderDtls>();
 				list = new DelOrderDtls[ls.Count];
 				ls.CopyTo (list);
 			}
@@ -197,19 +211,30 @@ namespace wincom.mobile.erp
 			findBTPrinter ();
 
 			if (mmDevice != null) {
-				StartPrint (inv, list,noofcopy);
-				updatePrintedStatus (inv);
+				StartPrint (so, list,noofcopy);
+				updatePrintedStatus (so);
+				var found =listData.Where (x => x.dono==so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList ();
+				if (found.Count > 0) {
+					found [0].isPrinted = true;
+					SetViewDlg viewdlg = SetViewDelegate;
+					listView.Adapter = new GenericListAdapter<DelOrder> (this, listData, Resource.Layout.ListItemRow, viewdlg);
+				}
 			}
 		
 		}
 
-		void updatePrintedStatus(DelOrder inv)
+		void updatePrintedStatus(DelOrder so)
 		{
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<DelOrder> ().Where (x => x.dono == inv.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder> ();
+				var list = db.Table<DelOrder> ().Where (x => x.dono == so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode).ToList<DelOrder> ();
 				if (list.Count > 0) {
-					list [0].isPrinted = true;
-					db.Update (list [0]);
+					var list2 = db.Table<DelOrderDtls> ()
+						.Where (x => x.dono == so.dono&&x.CompCode==compCode&&x.BranchCode==branchCode)
+						.ToList<DelOrderDtls> ();
+					if (list2.Count > 0) {
+						list [0].isPrinted = true;
+						db.Update (list [0]);
+					}
 				}
 			}
 		}

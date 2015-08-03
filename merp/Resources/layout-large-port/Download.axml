@@ -51,7 +51,8 @@
             android:textSize="24sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/upload"
-            android:id="@+id/butuploadSO" />
+            android:id="@+id/butuploadSO"
+            android:visibility="gone" />
         <Button
             android:text="UPLOAD DELIVERY ORDER"
             android:layout_width="match_parent"
@@ -69,7 +70,8 @@
             android:textSize="24sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/upload"
-            android:id="@+id/butuploadCN" />
+            android:id="@+id/butuploadCN"
+            android:visibility="gone" />
         <Button
             android:text="MAIN MENU"
             android:layout_width="match_parent"
