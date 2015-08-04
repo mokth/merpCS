@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -199,6 +198,7 @@ namespace wincom.mobile.erp
 			TextView txttax =  FindViewById<TextView> (Resource.Id.txttax);
 			EditText ttlamt = FindViewById<EditText> (Resource.Id.txtamount);
 			EditText ttltax = FindViewById<EditText> (Resource.Id.txttaxamt);
+
 			if (spinner.SelectedItem == null) {
 				Toast.MakeText (this, "No Item Code selected...", ToastLength.Long).Show ();			
 				spinner.RequestFocus ();

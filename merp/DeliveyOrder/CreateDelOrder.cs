@@ -147,6 +147,10 @@ namespace wincom.mobile.erp
 		{
 			DelOrder dorder = new DelOrder ();
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
+			if (!Utility.IsValidDateString (trxdate.Text)) {
+				Toast.MakeText (this,"Invalid Transaction Date format...", ToastLength.Long).Show ();	
+				return;
+			}
 			DateTime dodate = Utility.ConvertToDate (trxdate.Text);
 			DateTime tmr = dodate.AddDays (1);
 			AdNumDate adNum= DataHelper.GetNumDate(pathToDatabase, dodate,"DO",compCode,branchCode);

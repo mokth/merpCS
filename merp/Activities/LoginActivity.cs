@@ -23,8 +23,15 @@ namespace wincom.mobile.erp
 		static volatile bool _donwloadPro = false;
 		protected override void OnCreate (Bundle bundle)
 		{
-			base.OnCreate (bundle);
+			
 			SetContentView (Resource.Layout.SignIn);
+			string exit= Intent.GetStringExtra ("exit") ?? "no";
+			if (exit == "yes") {
+				ExitApp ();
+				return;
+			}
+
+			base.OnCreate (bundle);
 			// Create your application here
 			EventManagerFacade.Instance.GetEventManager ().AddListener (this);
 
@@ -37,8 +44,9 @@ namespace wincom.mobile.erp
 			Button bexit = FindViewById<Button> (Resource.Id.exit);
 			EditText txtcode = FindViewById<EditText> (Resource.Id.login_code);
 			bexit.Click += (object sender, EventArgs e) => {
-				Finish ();
-				Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
+				//Finish ();
+				//Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
+				ExitApp();
 			};
 			//InitializeServiceClient();
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
@@ -74,6 +82,24 @@ namespace wincom.mobile.erp
 				login.Click += (object sender, EventArgs e) => {
 					LoginIntoCloud ();
 				};
+			}
+
+		}
+
+		void ExitApp ()
+		{
+			//var intent = new Intent (this, typeof(LoginActivity));
+			//StartActivity (intent);
+			try {
+				((GlobalvarsApp)this.Application).ISLOGON = false;
+				Finish ();
+
+				Intent intent = new Intent (Intent.ActionMain);
+				intent.AddCategory (Intent.CategoryHome);
+				intent.SetFlags (ActivityFlags.NewTask);
+				StartActivity (intent);
+
+			} catch {
 			}
 
 		}
@@ -132,13 +158,13 @@ namespace wincom.mobile.erp
 			File.Copy(filename, pathToDatabase, true);
 		}
 
-		void ExitApp ()
-		{
-			((GlobalvarsApp)this.Application).ISLOGON = false;
-			Finish ();
-			Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
-
-		}
+//		void ExitApp ()
+//		{
+//			((GlobalvarsApp)this.Application).ISLOGON = false;
+//			Finish ();
+//			Android.OS.Process.KillProcess (Android.OS.Process.MyPid ());
+//
+//		}
 
 		void createTable(string pathToDatabase)
 		{

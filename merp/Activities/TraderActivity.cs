@@ -25,6 +25,9 @@ namespace wincom.mobile.erp
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+			if (!((GlobalvarsApp)this.Application).ISLOGON) {
+				Finish ();
+			}
 			SetContentView (Resource.Layout.TraderInfo);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;

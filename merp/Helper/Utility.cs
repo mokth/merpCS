@@ -3,6 +3,7 @@ using Android.Bluetooth;
 using Android.Widget;
 using Android.Content;
 using Android.App;
+using System.Globalization;
 
 namespace wincom.mobile.erp
 {
@@ -76,6 +77,22 @@ namespace wincom.mobile.erp
 			}
 
 			return mmDevice;
+		}
+
+		public static bool IsValidDateString (string datestr)
+		{   
+			bool valid = false;
+			DateTime sdate;
+			CultureInfo culture;
+			DateTimeStyles styles;
+			culture = CultureInfo.CreateSpecificCulture("en-GB"); 
+			styles = DateTimeStyles.None;
+
+			if (DateTime.TryParse (datestr, culture, styles, out sdate)) {
+				valid = true;
+			}
+
+			return valid;
 		}
 	}
 }

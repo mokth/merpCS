@@ -202,6 +202,12 @@ namespace wincom.mobile.erp
 			string comp =((GlobalvarsApp)Application).COMPANY_CODE;
 			string brn =((GlobalvarsApp)Application).BRANCH_CODE;
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
+
+			if (!Utility.IsValidDateString (trxdate.Text)) {
+				Toast.MakeText (this,"Invalid Transaction Date format...", ToastLength.Long).Show ();	
+				return;
+			}
+
 			DateTime invdate = Utility.ConvertToDate (trxdate.Text);
 			DateTime tmr = invdate.AddDays (1);
 			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate,compCode,branchCode);
@@ -211,6 +217,7 @@ namespace wincom.mobile.erp
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
 			EditText ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			EditText month =  FindViewById<EditText> (Resource.Id.newinv_month);
+
 
 			if (month.Text.Trim () == "") {
 			

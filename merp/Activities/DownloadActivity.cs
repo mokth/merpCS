@@ -19,6 +19,9 @@ namespace wincom.mobile.erp
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+			if (!((GlobalvarsApp)this.Application).ISLOGON) {
+				Finish ();
+			}
 			SetContentView (Resource.Layout.Download);
 
 			Button butdownItem = FindViewById<Button> (Resource.Id.butDown);
