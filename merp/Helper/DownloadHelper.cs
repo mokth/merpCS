@@ -33,6 +33,12 @@ namespace wincom.mobile.erp
 			startDownloadCompInfo(true) ;
 		}
 
+		public void NotDownloadAll()
+		{
+			_downloadAll = false;
+
+		}
+
 		public void startDownloadItem()
 		{
 			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;

@@ -122,6 +122,18 @@ namespace wincom.mobile.erp
 				EditText gst = FindViewById<EditText> (Resource.Id.txtcust_gst);
 				EditText nric = FindViewById<EditText> (Resource.Id.txtcust_nric);
 
+				if (string.IsNullOrEmpty(code.Text))
+				{
+					Toast.MakeText (this,"Customer Code is blank...", ToastLength.Long).Show ();	
+					return isSave;
+				}
+
+				if (string.IsNullOrEmpty(name.Text))
+				{
+					Toast.MakeText (this,"Customer Name is blank...", ToastLength.Long).Show ();	
+					return isSave;
+				}
+
 				Trader trd = new Trader ();
 				trd.CustCode = code.Text.ToUpper ();
 				trd.Addr1 = addr1.Text.ToUpper ();

@@ -15,7 +15,7 @@ using Android.Util;
 
 namespace wincom.mobile.erp
 {
-	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
+	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, ClearTaskOnLaunch=true,Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
 	public class LoginActivity : Activity,IEventListener
 	{
 		//private Service1Client _client;
@@ -26,9 +26,9 @@ namespace wincom.mobile.erp
 			
 			SetContentView (Resource.Layout.SignIn);
 			string exit= Intent.GetStringExtra ("exit") ?? "no";
-			if (exit == "yes") {
+			if (exit == "YES") {
 				ExitApp ();
-				return;
+			
 			}
 
 			base.OnCreate (bundle);
@@ -93,7 +93,9 @@ namespace wincom.mobile.erp
 			try {
 				((GlobalvarsApp)this.Application).ISLOGON = false;
 				Finish ();
-
+				if (Parent!=null)
+				  Parent.Finish();
+				FinishAffinity();
 				Intent intent = new Intent (Intent.ActionMain);
 				intent.AddCategory (Intent.CategoryHome);
 				intent.SetFlags (ActivityFlags.NewTask);
