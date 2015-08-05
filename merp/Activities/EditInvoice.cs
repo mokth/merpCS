@@ -30,6 +30,7 @@ namespace wincom.mobile.erp
 		Invoice invInfo;
 		EditText ccType ;
 		EditText ccNo;
+		string _ccNumber="";
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -126,11 +127,31 @@ namespace wincom.mobile.erp
 			txtinvno.Text = invInfo.invno;
 			ccNo.Text = invInfo.CCardNo;
 			month.Text = invInfo.InstMonth.ToString ();
+			_ccNumber = invInfo.CCardNo;
 		}
 
 		void CcNo_AfterTextChanged (object sender, Android.Text.AfterTextChangedEventArgs e)
 		{
 			EditText ccNo = (EditText)sender;
+
+
+			if(_ccNumber.Length < ccNo.Text.Length){
+
+				switch(ccNo.Text.Length){
+				case 5:
+					ccNo.Text =ccNo.Text.Insert(4, " ");
+					break;
+				case 10:
+					ccNo.Text= ccNo.Text.Insert(9, " ");
+					break;
+				case 15:
+					ccNo.Text=ccNo.Text.Insert(14, " ");
+					break;
+				}
+			}
+			ccNo.SetSelection(ccNo.Text.Length);
+			_ccNumber = ccNo.Text;
+
 			bool isvalid =CCardHelper.IsCardNumberValid (ccNo.Text);
 			if (isvalid) {
 				CardType ctype = CCardHelper.GetCardType (ccNo.Text);

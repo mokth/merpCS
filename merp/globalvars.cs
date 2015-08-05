@@ -5,7 +5,7 @@ using System.IO;
 
 namespace wincom.mobile.erp
 {
-	[Application]
+	[Application(Label = "M-ERP (CS)")]
 	public class GlobalvarsApp:Application
 	{
 		public string COMPANY_CODE;

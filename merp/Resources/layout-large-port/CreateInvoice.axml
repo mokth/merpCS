@@ -145,7 +145,8 @@
                     android:background="@android:drawable/edit_text"
                     android:id="@+id/newinv_ccno"
                     android:textSize="24sp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:maxLength="19" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -182,7 +183,9 @@
             android:background="@android:drawable/edit_text"
             android:id="@+id/newinv_month"
             android:textSize="24sp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:numeric="integer"
+            android:maxLength="3" />
     </LinearLayout>
     <TableLayout
         android:minWidth="25px"

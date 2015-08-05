@@ -15,7 +15,7 @@ using Android.Util;
 
 namespace wincom.mobile.erp
 {
-	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, ClearTaskOnLaunch=true,Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
+	[Activity (Label = "M-ERP (CS)", MainLauncher = true,NoHistory=true, ClearTaskOnLaunch=true,Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
 	public class LoginActivity : Activity,IEventListener
 	{
 		//private Service1Client _client;

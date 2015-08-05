@@ -136,7 +136,8 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:background="@android:drawable/edit_text"
                         android:id="@+id/newinv_ccno"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:maxLength="19" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -170,7 +171,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@android:drawable/edit_text"
                 android:id="@+id/newinv_month"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:maxLength="3"
+                android:numeric="integer" />
         </LinearLayout>
         <TableLayout
             android:minWidth="25px"

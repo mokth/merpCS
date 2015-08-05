@@ -53,6 +53,7 @@ namespace wincom.mobile.erp
 
 		public static CardType GetCardType(string cardNumber)
 		{
+			cardNumber = cardNumber.Replace (" ", "");
 			foreach (CardTypeInfo info in _cardTypeInfo)
 			{
 				if (cardNumber.Length == info.Length && 
@@ -66,7 +67,7 @@ namespace wincom.mobile.erp
 		public static bool IsCardNumberValid(string cardNumber)
 		{
 			int i, checkSum = 0;
-
+			cardNumber = cardNumber.Replace (" ", "");
 			// Compute checksum of every other digit starting from right-most digit
 			for (i = cardNumber.Length - 1; i >= 0; i -= 2)
 				checkSum += (cardNumber[i] - '0');

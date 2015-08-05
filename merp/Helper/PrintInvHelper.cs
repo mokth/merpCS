@@ -713,6 +713,16 @@ namespace wincom.mobile.erp
 			test += "------------------------------------------\n";
 		}
 
+//		void string FormatCCardNo(string ccno)
+//		{
+//			string ccformat ="";
+//			//1234=1234=1234=1334			
+//			if (ccno.Length>=16)
+//			{
+//				
+//			}
+//		}
+
 		void PrintTaxSumm(ref string test,InvoiceDtls[] list )
 		{
 			List<Item> list2 = new List<Item> ();
@@ -724,6 +734,7 @@ namespace wincom.mobile.erp
 				select new {taxgrp = g.Key, ttltax = g.Sum (x => x.tax),ttlAmt = g.Sum (v => v.netamount)};
 
 			test += "SUMMARY\n";
+
 			test += "-------------------------------\n";
 			test += "TAX            AMOUNT   TAX AMT\n";
 			test += "-------------------------------\n";
@@ -748,7 +759,8 @@ namespace wincom.mobile.erp
 			double monthAmt = ttlAmt / inv.InstMonth;
 			test += "------------------------------------------\n";
 			test += "INSTALLMENT DETAILS\n";
-			test += "INSTALLMENT PLAN          :" + inv.InstMonth.ToString () + " MONTHS"+"\n";
+			test += "CREDIT CARD NO    : "+inv.CCardNo+"\n";
+			test += "INSTALLMENT PLAN  : " + inv.InstMonth.ToString () + " MONTHS"+"\n";
 			test += "MONTHLY REPAYMENT AMT (RM): "+Math.Round(monthAmt,2).ToString("n2")+"\n";
 			test += "------------------------------------------\n";
 			
