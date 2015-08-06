@@ -26,7 +26,7 @@
             android:editable="false"
             android:textColor="#ff140000"
             android:paddingLeft="5dp"
-            android:background="@android:drawable/edit_text" />
+            android:background="@drawable/bluethem_textfield_disabled_holo_light" />
         <TextView
             android:text="CUSTOMER"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -44,7 +44,7 @@
             android:editable="false"
             android:paddingLeft="5dp"
             android:textColor="#ff140000"
-            android:background="@android:drawable/edit_text" />
+            android:background="@drawable/bluethem_textfield_disabled_holo_light" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
@@ -78,7 +78,7 @@
                     android:id="@+id/txtcode"
                     android:paddingLeft="5dp"
                     android:textSize="24sp"
-                    android:background="@android:drawable/spinner_dropdown_background"
+                    android:background="@drawable/bluethem_spinner_background_holo_light"
                     android:fitsSystemWindows="false" />
             </LinearLayout>
             <LinearLayout
@@ -125,7 +125,7 @@
                     android:textSize="24sp"
                     android:paddingLeft="5dp"
                     android:textColor="#ff140000"
-                    android:background="@android:drawable/edit_text" />
+                    android:background="@drawable/bluethem_edit_text_holo_light" />
             </TableRow>
         </TableLayout>
     </LinearLayout>

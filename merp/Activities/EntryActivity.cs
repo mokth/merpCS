@@ -75,7 +75,7 @@ namespace wincom.mobile.erp
 			List<string> icodes = LoadItems ();
 
 			dataAdapter = new ArrayAdapter<String>(this,Resource.Layout.spinner_item, icodes);
-			dataAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+			dataAdapter.SetDropDownViewResource(Resource.Layout.SimpleSpinnerDropDownItemEx);
 
 			spinner.Adapter =dataAdapter;
 			if (EDITMODE == "EDIT") {

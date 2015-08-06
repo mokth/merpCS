@@ -14,7 +14,7 @@ using System.IO;
 
 namespace wincom.mobile.erp
 {
-	[Activity (Label = "NEW INVOICE")]			
+	[Activity (Label = "NEW INVOICE",Theme="@style/BlueThem")]			
 	public class CreateInvoice : Activity,IEventListener
 	{
 		string pathToDatabase;
@@ -83,7 +83,7 @@ namespace wincom.mobile.erp
 							this, Resource.Array.trxtype, Resource.Layout.spinner_item);
 
 			// Drop down layout style - list view with radio button
-			dataAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+			dataAdapter.SetDropDownViewResource(Resource.Layout.SimpleSpinnerDropDownItemEx);
 			dataAdapter2.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
 
 			// attaching data adapter to spinner

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/bluethem_edit_text_holo_light"
             android:id="@+id/newinv_date"
             android:textSize="24sp"
             android:drawableRight="@android:drawable/ic_menu_today"
@@ -45,7 +45,7 @@
             android:paddingLeft="5dp"
             android:textSize="24sp"
             android:textColor="#ff140000"
-            android:background="@android:drawable/edit_text" />
+            android:background="@drawable/bluethem_edit_text_holo_light" />
         <TextView
             android:text="TRANSACTION TYPE"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -62,7 +62,7 @@
             android:id="@+id/newinv_type"
             android:paddingLeft="5dp"
             android:textSize="24sp"
-            android:background="@android:drawable/spinner_dropdown_background" />
+            android:background="@drawable/bluethem_spinner_background_holo_light" />
         <TextView
             android:text="CUSTOMER"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -90,7 +90,7 @@
                     android:id="@+id/newinv_custcode"
                     android:paddingLeft="5dp"
                     android:textSize="24sp"
-                    android:background="@android:drawable/spinner_dropdown_background"
+                    android:background="@drawable/bluethem_spinner_background_holo_light"
                     android:fitsSystemWindows="false" />
             </LinearLayout>
             <LinearLayout
@@ -116,7 +116,7 @@
             android:paddingLeft="5dp"
             android:textSize="24sp"
             android:textColor="#ff140000"
-            android:background="@android:drawable/edit_text" />
+            android:background="@drawable/bluethem_textfield_disabled_holo_light" />
         <TextView
             android:text="CREDIT CARD NO"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -142,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:background="@android:drawable/edit_text"
+                    android:background="@drawable/bluethem_edit_text_holo_light"
                     android:id="@+id/newinv_ccno"
                     android:textSize="24sp"
                     android:textColor="@android:color/black"
@@ -159,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:background="@android:drawable/edit_text"
+                    android:background="@drawable/bluethem_textfield_disabled_holo_light"
                     android:id="@+id/newinv_cctype"
                     android:textSize="24sp"
                     android:textColor="@android:color/black"
@@ -181,7 +181,7 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/bluethem_edit_text_holo_light"
             android:id="@+id/newinv_bank"
             android:textColor="@android:color/black" />
         <TextView
@@ -198,7 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/bluethem_edit_text_holo_light"
             android:id="@+id/newinv_month"
             android:textSize="24sp"
             android:textColor="@android:color/black"

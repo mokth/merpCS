@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/bluethem_textfield_default_holo_light"
             android:id="@+id/trxdatefr"
             android:drawableRight="@android:drawable/ic_menu_today"
             android:textColor="@android:color/black" />
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/bluethem_textfield_default_holo_light"
             android:id="@+id/trxdateto"
             android:drawableRight="@android:drawable/ic_menu_today"
             android:textColor="@android:color/black" />

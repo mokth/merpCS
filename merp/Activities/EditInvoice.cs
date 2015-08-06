@@ -86,7 +86,7 @@ namespace wincom.mobile.erp
 			dataAdapter2 =ArrayAdapter.CreateFromResource (
 							this, Resource.Array.trxtype, Resource.Layout.spinner_item);
 			// Drop down layout style - list view with radio button
-			dataAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+			dataAdapter.SetDropDownViewResource(Resource.Layout.SimpleSpinnerDropDownItemEx);
 			dataAdapter2.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
 
 			// attaching data adapter to spinner

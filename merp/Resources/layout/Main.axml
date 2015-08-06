@@ -9,53 +9,59 @@
         android:layout_height="wrap_content">
         <Button
             android:text="TRANSACTION"
-            style="@style/XamButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/butTrans"
-            android:drawableLeft="@drawable/shop" />
+            android:drawableLeft="@drawable/shop"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="TRANSACTION LIST"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/report"
-            android:id="@+id/butInvlist" />
+            android:id="@+id/butInvlist"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="MASTER ITEM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/item"
-            android:id="@+id/butMaster" />
+            android:id="@+id/butMaster"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="DOWNLOAD/UPLOAD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/download"
-            android:id="@+id/butDown" />
+            android:id="@+id/butDown"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="SETTINGS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/download"
-            android:id="@+id/butsetting" />
+            android:id="@+id/butsetting"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="ABOUT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/about"
-            android:id="@+id/butAbout" />
+            android:id="@+id/butAbout"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="EXIT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/exit"
-            android:id="@+id/butOut" />
+            android:id="@+id/butOut"
+            android:background="@drawable/bluethem_btn_default_holo_light" />
     </LinearLayout>
 </ScrollView>
