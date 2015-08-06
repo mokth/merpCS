@@ -122,7 +122,7 @@ namespace wincom.mobile.erp
 						bill.UPrice = invdtl.price;
 						bill.Qty = invdtl.qty;
 						bill.TrxType = inv.trxtype;
-						bill.CCNo = inv.CCardNo;
+						bill.CCNo = inv.CCardNo+"|"+inv.CCBank;
 						bill.Remark = monthIns.ToString("n2");
 						bill.InsMonth = inv.InstMonth.ToString();
 						if (isFirstItem) {

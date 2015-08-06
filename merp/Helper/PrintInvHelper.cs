@@ -760,6 +760,7 @@ namespace wincom.mobile.erp
 			test += "------------------------------------------\n";
 			test += "INSTALLMENT DETAILS\n";
 			test += "CREDIT CARD NO    : "+inv.CCardNo+"\n";
+			test += "BANK OF ISSUE     : "+inv.CCBank+"\n";
 			test += "INSTALLMENT PLAN  : " + inv.InstMonth.ToString () + " MONTHS"+"\n";
 			test += "MONTHLY REPAYMENT AMT (RM): "+Math.Round(monthAmt,2).ToString("n2")+"\n";
 			test += "------------------------------------------\n";

@@ -235,6 +235,7 @@ namespace wincom.mobile.erp
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
 			EditText ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			EditText month =  FindViewById<EditText> (Resource.Id.newinv_month);
+			EditText bank = FindViewById<EditText> (Resource.Id.newinv_bank);
 
 
 			if (month.Text.Trim () == "") {
@@ -278,6 +279,7 @@ namespace wincom.mobile.erp
 				inv.CCardNo = ccNo.Text;
 				inv.InstMonth = Convert.ToInt32(month.Text);
 				inv.CCardType = ccType.Text;
+				inv.CCBank = bank.Text.ToUpper ();
 				txtinvno.Text = invno;
 				db.Insert (inv);
 				adNum.RunNo = runno;

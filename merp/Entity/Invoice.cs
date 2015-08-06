@@ -22,6 +22,7 @@ namespace wincom.mobile.erp
 		public string BranchCode{ get; set;}
 		public string CCardNo{ get; set;}
 		public string CCardType{ get; set;}
+		public string CCBank{ get; set;}
 		public int InstMonth{ get; set;}
 	}
 

@@ -117,6 +117,7 @@ namespace wincom.mobile.erp
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
 			EditText ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			EditText month =  FindViewById<EditText> (Resource.Id.newinv_month);
+			EditText bank = FindViewById<EditText> (Resource.Id.newinv_bank);
 
 			trxdate.Text = invInfo.invdate.ToString ("dd-MM-yyyy");
 			int pos1= dataAdapter.GetPosition (invInfo.custcode+" | "+invInfo.description);
@@ -128,6 +129,7 @@ namespace wincom.mobile.erp
 			ccNo.Text = invInfo.CCardNo;
 			month.Text = invInfo.InstMonth.ToString ();
 			_ccNumber = invInfo.CCardNo;
+			bank.Text = invInfo.CCBank;
 		}
 
 		void CcNo_AfterTextChanged (object sender, Android.Text.AfterTextChangedEventArgs e)
@@ -242,7 +244,7 @@ namespace wincom.mobile.erp
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
 			EditText ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			EditText month =  FindViewById<EditText> (Resource.Id.newinv_month);
-
+			EditText bank = FindViewById<EditText> (Resource.Id.newinv_bank);
 
 			if (month.Text.Trim () == "") {
 
@@ -273,7 +275,7 @@ namespace wincom.mobile.erp
 				invInfo.CompCode = comp;
 				invInfo.CCardNo = ccNo.Text;
 				invInfo.InstMonth = Convert.ToInt32(month.Text);
-
+				invInfo.CCBank = bank.Text;
 				db.Update (invInfo);
 				lSave = true;
 			}

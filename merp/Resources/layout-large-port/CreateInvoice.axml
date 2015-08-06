@@ -167,6 +167,24 @@
             </LinearLayout>
         </LinearLayout>
         <TextView
+            android:text="BANK OF ISSUE"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textColor="#ff1131f0"
+            android:textSize="24sp"
+            android:paddingLeft="5dp" />
+        <EditText
+            android:inputType="textCapCharacters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@android:drawable/edit_text"
+            android:id="@+id/newinv_bank"
+            android:textColor="@android:color/black" />
+        <TextView
             android:text="INSTALLMENT PLAN (MONTHS)"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"

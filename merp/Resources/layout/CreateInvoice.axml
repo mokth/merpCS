@@ -28,38 +28,78 @@
                 android:id="@+id/newinv_date"
                 android:drawableRight="@android:drawable/ic_menu_today"
                 android:textColor="@android:color/black" />
-            <TextView
-                android:text="INVOICE NO"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/lbinvno"
-                android:textColor="#ff1131f0"
-                android:paddingLeft="5dp" />
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:padding="2dip">
+                    <TextView
+                        android:text="INVOICE NO"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lbinvno"
+                        android:textColor="#ff1131f0"
+                        android:paddingLeft="5dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:paddingLeft="5dip">
+                    <TextView
+                        android:text="TYPE"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lbinvnotype"
+                        android:textColor="#ff1131f0"
+                        android:paddingLeft="5dp" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/newinv_no"
-                android:editable="false"
-                android:paddingLeft="5dp"
-                android:textColor="#ff140000"
-                android:background="@android:drawable/edit_text" />
-            <TextView
-                android:text="TRANSACTION TYPE"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/lbinvnotype"
-                android:textColor="#ff1131f0"
-                android:paddingLeft="5dp" />
-            <Spinner
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newinv_type"
-                android:paddingLeft="5dp"
-                android:background="@android:drawable/spinner_dropdown_background" />
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:padding="2dip">
+                    <TextView
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/newinv_no"
+                        android:editable="false"
+                        android:paddingLeft="5dp"
+                        android:textColor="#ff140000"
+                        android:background="@android:drawable/edit_text" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:paddingLeft="5dip">
+                    <Spinner
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/newinv_type"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/spinner_dropdown_background" />
+                </LinearLayout>
+            </LinearLayout>
             <TextView
                 android:text="CUSTOMER"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -109,7 +149,8 @@
                 android:editable="false"
                 android:paddingLeft="5dp"
                 android:textColor="#ff140000"
-                android:background="@android:drawable/edit_text" />
+                android:background="@android:drawable/edit_text"
+                android:visibility="gone" />
             <TextView
                 android:text="CREDIT CARD NO"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -156,24 +197,80 @@
                         android:editable="false" />
                 </LinearLayout>
             </LinearLayout>
-            <TextView
-                android:text="INSTALLMENT PLAN (MONTHS)"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/lbinvno"
-                android:textColor="#ff1131f0"
-                android:paddingLeft="5dp" />
-            <EditText
-                android:inputType="number"
-                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.6"
+                    android:padding="2dip">
+                    <TextView
+                        android:text="BANK OF ISSUE"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lbinvno"
+                        android:textColor="#ff1131f0"
+                        android:paddingLeft="5dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.4"
+                    android:gravity="center"
+                    android:paddingLeft="5dip">
+                    <TextView
+                        android:text="PLAN (MONTHS)"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lbinvno"
+                        android:textColor="#ff1131f0"
+                        android:paddingLeft="5dp" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@android:drawable/edit_text"
-                android:id="@+id/newinv_month"
-                android:textColor="@android:color/black"
-                android:maxLength="3"
-                android:numeric="integer" />
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.6"
+                    android:padding="2dip">
+                    <EditText
+                        android:inputType="textCapCharacters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:background="@android:drawable/edit_text"
+                        android:id="@+id/newinv_bank"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.4"
+                    android:gravity="center"
+                    android:paddingLeft="5dip">
+                    <EditText
+                        android:inputType="number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:background="@android:drawable/edit_text"
+                        android:id="@+id/newinv_month"
+                        android:textColor="@android:color/black"
+                        android:maxLength="3"
+                        android:numeric="integer" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
         <TableLayout
             android:minWidth="25px"
