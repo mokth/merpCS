@@ -388,6 +388,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\bluethem_btn_default_normal_holo_light.9.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\bluethem_btn_default_pressed_holo_light.9.png" />
     <AndroidResource Include="Resources\layout\SimpleSpinnerDropDownItemEx.axml" />
+    <AndroidResource Include="Resources\drawable\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

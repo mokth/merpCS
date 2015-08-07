@@ -243,34 +243,37 @@ namespace wincom.mobile.erp
 			public const int listview_selector_odd = 2130837538;
 			
 			// aapt resource value: 0x7f020023
-			public const int odd_row = 2130837539;
+			public const int logo = 2130837539;
 			
 			// aapt resource value: 0x7f020024
-			public const int ok = 2130837540;
+			public const int odd_row = 2130837540;
 			
 			// aapt resource value: 0x7f020025
-			public const int print = 2130837541;
+			public const int ok = 2130837541;
 			
 			// aapt resource value: 0x7f020026
-			public const int printer_blue = 2130837542;
+			public const int print = 2130837542;
 			
 			// aapt resource value: 0x7f020027
-			public const int report = 2130837543;
+			public const int printer_blue = 2130837543;
 			
 			// aapt resource value: 0x7f020028
-			public const int shop = 2130837544;
+			public const int report = 2130837544;
 			
 			// aapt resource value: 0x7f020029
-			public const int shoplist = 2130837545;
+			public const int shop = 2130837545;
 			
 			// aapt resource value: 0x7f02002a
-			public const int trader = 2130837546;
+			public const int shoplist = 2130837546;
 			
 			// aapt resource value: 0x7f02002b
-			public const int upload = 2130837547;
+			public const int trader = 2130837547;
 			
 			// aapt resource value: 0x7f02002c
-			public const int wrench = 2130837548;
+			public const int upload = 2130837548;
+			
+			// aapt resource value: 0x7f02002d
+			public const int wrench = 2130837549;
 			
 			static Drawable()
 			{
