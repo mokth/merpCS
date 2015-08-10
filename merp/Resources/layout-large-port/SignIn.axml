@@ -80,7 +80,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_marginTop="10dp"
             android:background="#307FC1"
-            android:text="Login"
+            android:text="LOGIN"
             android:textColor="@android:color/white"
             android:height="70dp" />
         <Button
@@ -98,7 +98,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="POWER BY"
+            android:text="POWERED BY"
             android:id="@+id/textView1"
             android:gravity="center"
             android:textColor="#fff3f3f3"

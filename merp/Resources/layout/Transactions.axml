@@ -10,6 +10,7 @@
         <Button
             android:text="INVOICE/CASH BILL"
             android:layout_width="match_parent"
+            android:height="53dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/shop"
@@ -17,22 +18,25 @@
         <Button
             android:text="SALES ORDER"
             android:layout_width="match_parent"
+            android:height="53dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/shop"
+            android:drawableLeft="@drawable/bill"
             android:id="@+id/butSO"
             android:visibility="gone" />
         <Button
             android:text="DELIVERY ORDER"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/shop"
+            android:drawableLeft="@drawable/delivery"
             android:id="@+id/butDO" />
         <Button
             android:text="CREDIT NOTE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/shop"
             android:id="@+id/butCN"
@@ -41,8 +45,9 @@
             android:text="MAIN MENU"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/left"
+            android:drawableLeft="@drawable/home"
             android:id="@+id/butMain" />
     </LinearLayout>
 </ScrollView>

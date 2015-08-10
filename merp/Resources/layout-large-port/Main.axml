@@ -16,15 +16,16 @@
             android:id="@+id/butTrans"
             android:textSize="24sp"
             android:height="80dp"
-            android:drawableLeft="@drawable/shop" />
+            android:drawableLeft="@drawable/shoplist" />
         <Button
             android:text="TRANSACTION LIST"
+            style="@style/ButtonBlueThem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:height="80dp"
             android:textSize="24sp"
-            android:drawableLeft="@drawable/shop"
+            android:drawableLeft="@drawable/doc"
             android:id="@+id/butInvlist" />
         <Button
             android:text="MASTER ITEM"
@@ -51,7 +52,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:height="80dp"
             android:textSize="24sp"
-            android:drawableLeft="@drawable/download"
+            android:drawableLeft="@drawable/upload"
             android:id="@+id/butsetting" />
         <Button
             android:text="ABOUT"

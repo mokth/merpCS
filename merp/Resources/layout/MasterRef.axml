@@ -11,6 +11,7 @@
             android:text="MASTER ITEM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/item"
             android:id="@+id/butMaster" />
@@ -18,6 +19,7 @@
             android:text="CUSTOMER PROFILE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/trader"
             android:id="@+id/butCustProf" />
@@ -25,8 +27,9 @@
             android:text="MAIN MENU"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/left"
+            android:drawableLeft="@drawable/home"
             android:id="@+id/butMain" />
     </LinearLayout>
 </ScrollView>

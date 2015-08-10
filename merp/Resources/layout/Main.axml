@@ -13,20 +13,23 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/butTrans"
-            android:drawableLeft="@drawable/shop"
+            android:height="53dp"
+            android:drawableLeft="@drawable/shoplist"
             android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="TRANSACTION LIST"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/report"
+            android:drawableLeft="@drawable/doc"
+            android:height="53dp"
             android:id="@+id/butInvlist"
             android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="MASTER ITEM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/item"
             android:id="@+id/butMaster"
@@ -35,6 +38,7 @@
             android:text="DOWNLOAD/UPLOAD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/download"
             android:id="@+id/butDown"
@@ -43,8 +47,9 @@
             android:text="SETTINGS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/download"
+            android:drawableLeft="@drawable/upload"
             android:id="@+id/butsetting"
             android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
@@ -53,12 +58,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/about"
+            android:height="53dp"
             android:id="@+id/butAbout"
             android:background="@drawable/bluethem_btn_default_holo_light" />
         <Button
             android:text="EXIT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="53dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/exit"
             android:id="@+id/butOut"

@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/shop"
+            android:drawableLeft="@drawable/delivery"
             android:textSize="24sp"
             android:height="80dp"
             android:id="@+id/butDO" />
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/left"
+            android:drawableLeft="@drawable/home"
             android:textSize="24sp"
             android:height="80dp"
             android:id="@+id/butMain" />
