@@ -342,7 +342,8 @@ namespace wincom.mobile.erp
 
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				db.DeleteAll<Item> ();
+				
+				db.DeleteAll<Item> ("Delete from Item where CompCode='"+comp+"' and BranchCode='"+brn+"'" );
 				foreach (ItemCode item in list) {
 					Item itm = new Item ();
 					itm.ICode = item.ICode;
@@ -376,7 +377,7 @@ namespace wincom.mobile.erp
 
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				db.DeleteAll<Trader> ("Delete from Trader where IsLocal =0");
+				db.DeleteAll<Trader> ("Delete from Trader where IsLocal =0 and CompCode='"+comp+"' and BranchCode='"+brn+"'" );
 				foreach (Customer item in list) {
 					Trader itm = new Trader ();
 					itm.CustCode = item.CustomerCode;
@@ -418,7 +419,7 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
 				var list2 = db.Table<AdUser>().ToList<AdUser>();
-				list2.RemoveAll (x => x.UserID == para[1]);
+				list2.RemoveAll (x => x.UserID == para[1]&&x.CompCode== para [2].ToUpper()&&x.BranchCode == para [3].ToUpper());
 				AdUser user = new AdUser ();
 				user.BranchCode = para [3].ToUpper();
 				user.CompCode = para [2].ToUpper();

@@ -19,6 +19,8 @@ namespace wincom.mobile.erp
 	public class SettingActivity : Activity
 	{
 		string pathToDatabase;
+		string compCode;
+		string branchCode;
 		Spinner spinner;
 		Spinner spinBt;
 		ArrayAdapter adapter;
@@ -31,6 +33,8 @@ namespace wincom.mobile.erp
 			if (!((GlobalvarsApp)this.Application).ISLOGON) {
 				Finish ();
 			}
+			compCode = ((GlobalvarsApp)this.Application).COMPANY_CODE;
+			branchCode = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 			SetContentView (Resource.Layout.AdPara);
 			spinner = FindViewById<Spinner> (Resource.Id.txtSize);
 			spinBt= FindViewById<Spinner> (Resource.Id.txtprinters);
@@ -73,7 +77,7 @@ namespace wincom.mobile.erp
 			AdPara apra = new AdPara ();
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list  = db.Table<AdPara> ().ToList<AdPara> ();
+				var list  = db.Table<AdPara> ().Where(x=>x.CompCode==compCode&&x.BranchCode==branchCode).ToList<AdPara> ();
 				if (list.Count > 0) {
 					apra = list [0];
 					txtprefix.Text = apra.Prefix;

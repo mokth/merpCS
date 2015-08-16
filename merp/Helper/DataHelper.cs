@@ -339,9 +339,9 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<CompanyInfo>().ToList<CompanyInfo>();
-				var list3 = db.Table<AdPara>().ToList<AdPara>();
-				var list4 = db.Table<AdNumDate> ().Where (x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month).ToList<AdNumDate> ();
+				var list2 = db.Table<CompanyInfo>().Where(x=>x.RegNo==pro.RegNo).ToList<CompanyInfo>();
+				var list3 = db.Table<AdPara>().Where(x=>x.CompCode==compcode && x.BranchCode==branchcode).ToList<AdPara>();
+				var list4 = db.Table<AdNumDate> ().Where (x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month&&x.CompCode==compcode && x.BranchCode==branchcode).ToList<AdNumDate> ();
 
 				CompanyInfo cprof = null;
 				if (list2.Count > 0) {

@@ -210,6 +210,7 @@ namespace wincom.mobile.erp
 			login.Enabled = false;
 			login.Text = "Please wait...";
 			//_client.LoginAsync (userid.Text, passw.Text, code.Text);
+			_donwloadPro = false;
 			DownloadHelper download= new DownloadHelper();
 			download.Downloadhandle = LoginDoneDlg; 
 			download.DownloadAllhandle =LoginDoneDlgEx; 
@@ -258,6 +259,8 @@ namespace wincom.mobile.erp
 			if (user.UserID.ToUpper () == userid.Text.ToUpper ()) {
 				if (user.Password == passw.Text) {
 					((GlobalvarsApp)this.Application).USERID_CODE = user.UserID.ToUpper();
+					((GlobalvarsApp)this.Application).COMPANY_CODE = user.CompCode.ToUpper();
+					((GlobalvarsApp)this.Application).BRANCH_CODE = user.BranchCode.ToUpper();
 					user.Islogon = true;
 					UpdateLogin (user);
 					ShowMainActivity (user.CompCode, user.BranchCode);	

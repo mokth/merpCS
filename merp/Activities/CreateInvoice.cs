@@ -68,7 +68,7 @@ namespace wincom.mobile.erp
 			ccNo =  FindViewById<EditText> (Resource.Id.newinv_ccno);
 			ccNo.AfterTextChanged+= CcNo_AfterTextChanged;
 
-
+			ccNo.RequestFocus ();
 			apara =  DataHelper.GetAdPara (pathToDatabase,compCode,branchCode);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			LoadTrader ();

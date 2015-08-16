@@ -10,7 +10,8 @@ namespace wincom.mobile.erp
 {
 	public class Trader
 	{
-		[PrimaryKey]
+		[PrimaryKey, AutoIncrement]
+		public int ID { get; set; }
 		public string CustCode{ get; set;}
 		public string CustName{ get; set;}
 		public string Addr1{ get; set;}
