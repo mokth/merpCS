@@ -304,6 +304,8 @@ namespace wincom.mobile.erp
 					info.RunNo = 0;
 					info.TrxType = "INV";
 					info.ID = -1;
+					info.BranchCode = bran;
+					info.CompCode = comp;
 
 				}
 			}
@@ -328,6 +330,8 @@ namespace wincom.mobile.erp
 					info.RunNo = 0;
 					info.TrxType = trxtype;
 					info.ID = -1;
+					info.BranchCode = bran;
+					info.CompCode = comp;
 				}
 			}
 

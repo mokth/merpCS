@@ -25,6 +25,7 @@ namespace wincom.mobile.erp
 		string dono ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
+		string EDITMODE="";
 		CompanyInfo comp;
 		bool isNotAllowEditAfterPrinted  ;
 
@@ -40,6 +41,8 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.InvDtlView);
 			dono = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
+			EDITMODE = Intent.GetStringExtra ("editmode") ?? "AUTO";
+
 			isNotAllowEditAfterPrinted  = DataHelper.GetDelOderPrintStatus (pathToDatabase,dono,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
@@ -50,6 +53,10 @@ namespace wincom.mobile.erp
 		   
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvItmBack); 
 			butInvBack.Click += (object sender, EventArgs e) => {
+				if (EDITMODE.ToLower()=="new")
+				{
+					DeleteDOWithEmptyDOitem();
+				}
 				StartActivity(typeof(DelOrderActivity));
 			};
 
@@ -65,6 +72,33 @@ namespace wincom.mobile.erp
 			// do nothing.
 		}
 
+		private void DeleteDOWithEmptyDOitem()
+		{
+			try{
+				using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+					var list = db.Table<DelOrderDtls>().Where(x=>x.dono==dono&&x.CompCode==compCode&&branchCode==branchCode).ToList<DelOrderDtls>();
+					if (list.Count == 0) {
+						var list2 = db.Table<DelOrder>().Where(x=>x.dono==dono&&x.CompCode==compCode&&branchCode==branchCode).ToList<DelOrder>();
+						if (list2.Count > 0) {
+							AdNumDate adNum= DataHelper.GetNumDate(pathToDatabase, list2[0].dodate,"DO",compCode,branchCode);
+							if (dono.Length > 5) {
+								string snum= dono.Substring (dono.Length - 4);					
+								int num;
+								if (int.TryParse (snum, out num)) {
+									if (adNum.RunNo == num) {
+										adNum.RunNo = num - 1;
+										db.Delete (list2[0]);
+										db.Delete (adNum);
+									}
+								}
+							}
+						}
+						//db.Table<Invoice> ().Delete (x => x.invno == invno);
+					}
+				}
+			}catch{
+			}
+		}
 
 		private void SetViewDelegate(View view,object clsobj)
 		{

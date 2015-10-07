@@ -23,6 +23,7 @@ namespace wincom.mobile.erp
 		string invno ="";
 		string CUSTCODE ="";
 		string CUSTNAME ="";
+		string EDITMODE="";
 		CompanyInfo comp;
 		bool isNotAllowEditAfterPrinted  ;
 		protected override void OnCreate (Bundle bundle)
@@ -38,6 +39,8 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.InvDtlView);
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
+			EDITMODE = Intent.GetStringExtra ("editmode") ?? "AUTO";
+
 			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno,compCode,branchCode);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
@@ -48,6 +51,11 @@ namespace wincom.mobile.erp
 		   
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvItmBack); 
 			butInvBack.Click += (object sender, EventArgs e) => {
+				if (EDITMODE.ToLower()=="new")
+				{
+					DeleteInvWithEmptyInovItem();
+				}
+				UpdateInvoiceAmount(invno);
 				StartActivity(typeof(InvoiceActivity));
 			};
 
@@ -63,13 +71,49 @@ namespace wincom.mobile.erp
 			// do nothing.
 		}
 
-//		protected override void OnSaveInstanceState (Bundle outState)
-//		{
-//			outState.PutInt ("click_count", _counter);
-//
-//			// always call the base implementation!
-//			base.OnSaveInstanceState (outState);    
-//		}
+		public void UpdateInvoiceAmount(string invno)
+		{
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var itemlist = db.Table<InvoiceDtls> ().Where (x => x.invno == invno);	
+				double ttlamt= itemlist.Sum (x => x.netamount);
+				double ttltax= itemlist.Sum (x => x.tax);
+				var invlist =db.Table<Invoice> ().Where (x => x.invno == invno).ToList<Invoice> ();
+				if (invlist.Count > 0) {
+					invlist [0].amount = ttlamt;
+					invlist [0].taxamt = ttltax;
+					db.Update (invlist [0]);
+				}
+			}
+		}
+
+		private void DeleteInvWithEmptyInovItem()
+		{
+			try{
+				using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+					var list = db.Table<InvoiceDtls>().Where(x=>x.invno==invno).ToList<InvoiceDtls>();
+					if (list.Count == 0) {
+						var list2 = db.Table<Invoice>().Where(x=>x.invno==invno).ToList<Invoice>();
+						if (list2.Count > 0) {
+							string trxtype = "INV";
+							AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, list2[0].invdate,trxtype,compCode,branchCode);
+							if (invno.Length > 5) {
+								string snum= invno.Substring (invno.Length - 4);					
+								int num;
+								if (int.TryParse (snum, out num)) {
+									if (adNum.RunNo == num) {
+										adNum.RunNo = num - 1;
+										db.Delete (list2[0]);
+										db.Delete (adNum);
+									}
+								}
+							}
+						}
+						//db.Table<Invoice> ().Delete (x => x.invno == invno);
+					}
+				}
+			}catch{
+			}
+		}
 
 		private void SetViewDelegate(View view,object clsobj)
 		{
